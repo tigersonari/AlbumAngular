@@ -1,0 +1,17 @@
+<h2>Cadastro de Participação</h2>
+
+<form [formGroup]="form">
+
+  <input formControlName="papel" placeholder="Papel">
+
+  <label>
+    <input type="checkbox" formControlName="destaque">
+    Destaque
+  </label>
+
+  <input type="number" formControlName="idFaixa" placeholder="ID da Faixa">
+
+  <input type="text" formControlName="idsProjetoMusical" placeholder="IDs Projetos (ex: 1,2)">
+
+  <button (click)="salvar()">Salvar</button>
+</form>

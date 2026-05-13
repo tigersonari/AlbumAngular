@@ -1,0 +1,27 @@
+.container {
+  max-width: 500px;
+  margin: auto;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+input, select {
+  padding: 8px;
+  border: 1px solid #ccc;
+}
+
+select[multiple] {
+  height: 120px;
+}
+
+button {
+  padding: 10px;
+  background: #222;
+  color: white;
+  border: none;
+  cursor: pointer;
+}

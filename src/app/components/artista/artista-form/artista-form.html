@@ -1,0 +1,21 @@
+<div class="container">
+<h2>Cadastro de Artista</h2>
+
+<form [formGroup]="form">
+
+  <input formControlName="nomeCompleto" placeholder="Nome completo">
+  <input formControlName="nomeArtistico" placeholder="Nome artístico">
+  <input type="date" formControlName="dataNascimento">
+  <input formControlName="nacionalidade" placeholder="Nacionalidade">
+  <input formControlName="funcaoPrincipal" placeholder="Função">
+
+  <select formControlName="idEmpresa">
+  <option *ngFor="let e of empresas" [value]="e.id">
+    {{e.nomeEmpresa}}
+  </option>
+</select>
+
+<button type="button" (click)="cancelar()">Cancelar</button>
+  <button (click)="salvar()">Salvar</button>
+</form> 
+</div>

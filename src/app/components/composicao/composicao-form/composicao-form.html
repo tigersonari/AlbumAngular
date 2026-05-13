@@ -1,0 +1,30 @@
+<div class="container">
+  <h2>Cadastro de Composição</h2>
+
+<form [formGroup]="form">
+
+  <input type="date" formControlName="data">
+
+  <label>Projetos Musicais</label>
+
+  <select multiple formControlName="projetos">
+
+  <optgroup label="Artistas">
+    <option *ngFor="let a of artistas" [ngValue]="a">
+      {{a.nomeArtistico}}
+    </option>
+  </optgroup>
+
+  <optgroup label="Grupos">
+    <option *ngFor="let g of grupos" [ngValue]="g">
+      {{g.nomeGrupo}}
+    </option>
+  </optgroup>
+
+  </select>
+
+  <button type="button" (click)="cancelar()">Cancelar</button>
+  <button (click)="salvar()">Salvar</button>
+
+</form>
+</div>

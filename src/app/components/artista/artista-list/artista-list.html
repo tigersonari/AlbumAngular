@@ -1,0 +1,38 @@
+<div class="container">
+<h2>Artistas</h2>
+
+<select [(ngModel)]="empresaFiltro">
+  <option [ngValue]="null">Todas empresas</option>
+  <option *ngFor="let e of empresas" [value]="e.id">
+    {{e.nomeEmpresa}}
+  </option>
+</select>
+
+<button (click)="buscarPorEmpresa()">Filtrar</button>
+
+<!-- <input [(ngModel)]="filtro" placeholder="Buscar por nome">
+<button (click)="pesquisar()">Buscar</button> -->
+
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Nome</th>
+    <th>Função</th>
+    <th>Empresa</th>
+    <th>Ações</th>
+  </tr>
+
+  <tr *ngFor="let a of artistas">
+    <td>{{a.id}}</td>
+    <td>{{a.nomeArtistico}}</td>
+    <td>{{a.funcaoPrincipal}}</td>
+    <td>{{a.empresa?.nomeEmpresa}}</td>
+    <td>
+      <button [routerLink]="['/artistas/edit', a.id]">Editar</button>
+      <button (click)="deletar(a.id)">Excluir</button>
+    </td>
+  </tr>
+</table>
+
+<button [routerLink]="['/artistas/new']">Novo</button>
+</div> 

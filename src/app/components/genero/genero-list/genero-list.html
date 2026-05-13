@@ -1,0 +1,31 @@
+<div class="container">
+
+<h2>Gêneros</h2>
+
+<input [(ngModel)]="filtro" placeholder="Buscar por nome">
+<button (click)="pesquisar()">Buscar</button>
+
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Nome</th>
+    <th>Ações</th>
+  </tr>
+
+  <tr *ngFor="let g of generos">
+    <td>{{g.id}}</td>
+    <td>{{g.nomeGenero}}</td>
+    <td>
+      <button [routerLink]="['/generos/edit', g.id]">Editar</button>
+      <button (click)="deletar(g.id!)">Excluir</button>
+    </td>
+  </tr>
+</table>
+
+<button (click)="novo()">Novo</button>
+
+<button (click)="anterior()">Anterior</button>
+<span>Página {{page + 1}}</span>
+<button (click)="proxima()">Próxima</button>
+
+</div>

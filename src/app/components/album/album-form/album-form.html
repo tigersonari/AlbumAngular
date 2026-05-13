@@ -1,0 +1,38 @@
+<div class="container">
+
+<h2>Cadastro de Álbum</h2>
+
+<form [formGroup]="form">
+
+  <input formControlName="titulo" placeholder="Título">
+  <input formControlName="descricao" placeholder="Descrição">
+  <input type="date" formControlName="lancamento">
+
+  <label>Formato</label>
+  <select formControlName="formato">
+    <option [value]="1">SINGLE</option>
+    <option [value]="2">MIXTAPE</option>
+    <option [value]="3">DELUXE</option>
+    <option [value]="4">EP</option>
+    <option [value]="5">LONGPLAY</option>
+  </select>
+
+  <label>Produção</label>
+  <select formControlName="idProducao">
+    <option *ngFor="let p of producoes" [value]="p.id">
+      {{p.produtor}}
+    </option>
+  </select>
+
+  <label>Projetos</label>
+  <select multiple formControlName="idsProjetos">
+    <option *ngFor="let p of projetos" [value]="p.id">
+      Projeto {{p.id}}
+    </option>
+  </select>
+
+  <button (click)="salvar()">Salvar</button>
+
+</form>
+
+</div>

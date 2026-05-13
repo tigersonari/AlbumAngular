@@ -1,0 +1,28 @@
+<h2>Produções</h2>
+
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Produtor</th>
+    <th>Eng. Gravação</th>
+    <th>Eng. Mixagem</th>
+    <th>Eng. Masterização</th>
+    <th>Empresa</th>
+    <th>Ações</th>
+  </tr>
+
+  <tr *ngFor="let p of producoes">
+    <td>{{p.id}}</td>
+    <td>{{p.produtor}}</td>
+    <td>{{p.engenheiroGravacao}}</td>
+    <td>{{p.engenheiroMixagem}}</td>
+    <td>{{p.engenheiroMasterizacao}}</td>
+    <!-- <td>{{ getNomeEmpresa(p.idEmpresa) }}</td> -->
+    <td>
+      <button [routerLink]="['/producoes/edit', p.id]">Editar</button>
+      <button (click)="deletar(p.id)">Excluir</button>
+    </td>
+  </tr>
+</table>
+
+<button [routerLink]="['/producoes/new']">Nova Produção</button>

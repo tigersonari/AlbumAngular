@@ -1,0 +1,26 @@
+<h2>Faixas</h2>
+
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Título</th>
+    <th>Álbum</th>
+    <th>Gênero</th>
+    <th>Versão</th>
+    <th>Ações</th>
+  </tr>
+
+  <tr *ngFor="let f of faixas">
+    <td>{{f.id}}</td>
+    <td>{{f.titulo}}</td>
+    <td>{{ getNomeAlbum(f.idAlbum) }}</td>
+    <td>{{ getNomeGenero(f.idGenero) }}</td>
+    <td>{{ getTipoVersao(f.tipoVersao) }}</td>
+    <td>
+      <button [routerLink]="['/faixas/edit', f.id]">Editar</button>
+      <button (click)="excluir(f.id)">Excluir</button>
+    </td>
+  </tr>
+</table>
+
+<button [routerLink]="['/faixas/new']">Nova Faixa</button>

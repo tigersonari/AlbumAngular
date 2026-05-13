@@ -1,0 +1,34 @@
+<h2>Participações (Feats)</h2>
+
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Papel</th>
+    <th>Destaque</th>
+    <th>Faixa</th>
+    <th>Projetos</th>
+    <th>Ações</th>
+  </tr>
+
+  <tr *ngFor="let p of participacoes">
+    <td>{{p.id}}</td>
+    <td>{{p.papel}}</td>
+    <td>{{p.destaque ? 'Sim' : 'Não'}}</td>
+    <td>{{p.idFaixa}}</td>
+
+    <!--  nomes aqui -->
+    <td>{{ getProjetos(p.idsProjetoMusical) }}</td>
+
+    <td>
+      <button [routerLink]="['/participacoes/edit', p.id]">Editar</button>
+      <button (click)="excluir(p.id)">Excluir</button>
+    </td>
+  </tr>
+</table>
+
+<div style="margin-top: 10px;">
+  <button (click)="prev()">Anterior</button>
+  <button (click)="next()">Próximo</button>
+</div>
+
+<button [routerLink]="['/participacoes/new']">Nova Participação</button>

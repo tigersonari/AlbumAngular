@@ -1,0 +1,23 @@
+<h2>Cadastro de Produção</h2>
+
+<form [formGroup]="form">
+
+  <input formControlName="produtor" placeholder="Produtor">
+
+  <input formControlName="engenheiroGravacao" placeholder="Eng. Gravação">
+
+  <input formControlName="engenheiroMixagem" placeholder="Eng. Mixagem">
+
+  <input formControlName="engenheiroMasterizacao" placeholder="Eng. Masterização">
+
+  <input type="date" formControlName="dataProducao">
+
+  <select formControlName="idEmpresa">
+  <option value="">Selecione a empresa</option>
+  <option *ngFor="let e of empresas" [value]="e.id">
+    {{ e.nomeEmpresa }}
+  </option>
+</select>
+
+  <button (click)="salvar()">Salvar</button>
+</form>

@@ -1,0 +1,26 @@
+<div class="container">
+  <h2>Grupos Musicais</h2>
+
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Nome</th>
+    <th>Empresa</th>
+    <th>Integrantes</th>
+    <th>Ações</th>
+  </tr>
+
+  <tr *ngFor="let g of grupos">
+    <td>{{g.id}}</td>
+    <td>{{g.nomeGrupo}}</td>
+    <td>{{g.empresa?.nomeEmpresa}}</td>
+    <td>{{ getNomesMembros(g.membros) }}</td>
+    <td>
+      <button [routerLink]="['/grupos/edit', g.id]">Editar</button>
+      <button (click)="deletar(g.id)">Excluir</button>
+    </td>
+  </tr>
+</table>
+
+<button [routerLink]="['/grupos/new']">Novo Grupo</button>
+  </div>

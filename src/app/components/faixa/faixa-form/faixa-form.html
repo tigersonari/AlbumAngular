@@ -1,0 +1,47 @@
+<h2>Cadastro de Faixa</h2>
+
+<form [formGroup]="form">
+
+  <input formControlName="titulo" placeholder="Título">
+
+  <input type="number" formControlName="numeroFaixa" placeholder="Número da faixa">
+
+  <input type="number" formControlName="duracao" placeholder="Duração">
+
+  <input formControlName="idioma" placeholder="Idioma">
+
+  <label>Tipo de Versão</label>
+<select formControlName="tipoVersao">
+  <option [value]="1">ORIGINAL</option>
+  <option [value]="2">REMIX</option>
+  <option [value]="3">ACUSTICO</option>
+  <option [value]="4">LIVE</option>
+  <option [value]="5">INSTRUMENTAL</option>
+  <option [value]="6">COVER</option>
+  <option [value]="7">REMASTERED</option>
+</select>
+
+  <label>Álbum</label>
+  <select formControlName="idAlbum">
+    <option *ngFor="let a of albuns" [value]="a.id">
+      {{a.titulo}}
+    </option>
+  </select>
+
+  <label>Gênero</label>
+  <select formControlName="idGenero">
+    <option *ngFor="let g of generos" [value]="g.id">
+      {{g.nomeGenero}}
+    </option>
+  </select>
+
+  <label>Composição</label>
+  <select formControlName="idComposicao">
+    <option *ngFor="let c of composicoes" [value]="c.id">
+      Composição {{c.id}}
+    </option>
+  </select>
+
+  <button (click)="salvar()">Salvar</button>
+
+</form>

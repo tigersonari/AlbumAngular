@@ -1,0 +1,37 @@
+<div class="container">
+
+<h2>Álbuns</h2>
+
+<input [(ngModel)]="filtro" placeholder="Buscar por título">
+<button (click)="pesquisar()">Buscar</button>
+
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Título</th>
+    <th>Lançamento</th>
+    <th>Formato</th>
+    <th>Produção</th>
+    <th>Projetos</th>
+    <th>Gêneros</th>
+    <th>Ações</th>
+  </tr>
+
+  <tr *ngFor="let a of albuns">
+    <td>{{a.id}}</td>
+    <td>{{a.titulo}}</td>
+    <td>{{a.lancamento}}</td>
+    <td>{{a.formato}}</td>
+    <td>{{getNomeProducao(a.idProducao)}}</td>
+    <td>{{getProjetos(a.idsProjetos)}}</td>
+    <td>{{getGenerosDoAlbum(a.id)}}</td>
+    <td>
+      <button [routerLink]="['/albums/edit', a.id]">Editar</button>
+      <button (click)="excluir(a.id)">Excluir</button>
+    </td>
+  </tr>
+</table>
+
+<button [routerLink]="['/albums/new']">Novo</button>
+
+</div>

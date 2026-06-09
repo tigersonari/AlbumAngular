@@ -3,23 +3,25 @@ import { ProducaoService } from '../../../services/producao.service';
 import { Producao } from '../../../models/producao.model';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-
-import { EmpresaService } from '../../../services/empresa.service';
-import { Empresa } from '../../../models/empresa.model';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-producao-list',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './producao-list.html',
   styleUrls: ['./producao-list.css']
 })
 export class ProducaoListComponent implements OnInit {
 
-  producoes: any[] = [];
+  producoes: Producao[] = [];
+  filtro = '';
+
   page = 0;
   pageSize = 10;
-  total = 0;
+
+  carregando = false;
+  mensagemErro = '';
 
   constructor(
     private service: ProducaoService,
@@ -30,28 +32,71 @@ export class ProducaoListComponent implements OnInit {
     this.loadData();
   }
 
-  loadData() {
-    this.service.findAll(this.page, this.pageSize)
-      .subscribe(data => this.producoes = data);
+  loadData(): void {
+    this.carregando = true;
+    this.mensagemErro = '';
 
-    this.service.count()
-      .subscribe(c => this.total = c);
+    this.service.findAll(this.page, this.pageSize).subscribe({
+      next: (data) => {
+        this.producoes = data;
+        this.carregando = false;
+      },
+      error: () => {
+        this.mensagemErro = 'Erro ao carregar produções.';
+        this.carregando = false;
+      }
+    });
   }
 
-  deletar(id: number) {
-    this.service.delete(id).subscribe(() => this.loadData());
+  pesquisar(): void {
+    const termo = this.filtro.trim();
+
+    if (!termo) {
+      this.page = 0;
+      this.loadData();
+      return;
+    }
+
+    this.carregando = true;
+    this.mensagemErro = '';
+
+    this.service.findByProdutor(termo).subscribe({
+      next: (data) => {
+        this.producoes = data;
+        this.carregando = false;
+      },
+      error: () => {
+        this.mensagemErro = 'Erro ao pesquisar produção.';
+        this.carregando = false;
+      }
+    });
   }
 
-  novo() {
+  deletar(id: number): void {
+    if (!confirm('Deseja realmente excluir esta produção?')) {
+      return;
+    }
+
+    this.service.delete(id).subscribe({
+      next: () => this.loadData(),
+      error: () => this.mensagemErro = 'Erro ao excluir produção.'
+    });
+  }
+
+  novo(): void {
     this.router.navigate(['/producoes/new']);
   }
 
-  proxima() {
+  proxima(): void {
+    if (this.producoes.length < this.pageSize) {
+      return;
+    }
+
     this.page++;
     this.loadData();
   }
 
-  anterior() {
+  anterior(): void {
     if (this.page > 0) {
       this.page--;
       this.loadData();

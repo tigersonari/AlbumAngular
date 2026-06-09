@@ -1,32 +1,51 @@
 <div class="container">
-<h2>Empresas</h2>
 
-<input [(ngModel)]="filtro" placeholder="Buscar por nome">
-<button (click)="pesquisar()">Buscar</button>
+  <h2>Empresas</h2>
 
-<table>
-  <tr>
-    <th>ID</th>
-    <th>Nome</th>
-    <th>CNPJ</th>
-    <th>Ações</th>
-  </tr>
+  <div>
+    <input [(ngModel)]="filtro" placeholder="Buscar por nome">
+    <button (click)="pesquisar()">Buscar</button>
+    <button (click)="novo()">Novo</button>
+  </div>
 
-  <tr *ngFor="let e of empresas">
-    <td>{{e.id}}</td>
-    <td>{{e.nomeEmpresa}}</td>
-    <td>{{e.cnpj}}</td>
-    <td>
-      <button [routerLink]="['/empresas/edit', e.id]">Editar</button>
-      <button (click)="deletar(e.id!)">Excluir</button>
-    </td>
-  </tr>
-</table>
+  <p *ngIf="carregando">Carregando...</p>
+  <p *ngIf="mensagemErro">{{ mensagemErro }}</p>
 
-<button (click)="novo()">Novo</button>
+  <table *ngIf="!carregando">
+    <tr>
+      <th>ID</th>
+      <th>Nome</th>
+      <th>CNPJ</th>
+      <th>Ações</th>
+    </tr>
 
-<button (click)="anterior()">Anterior</button>
-<span>Página {{page + 1}}</span>
-<button (click)="proxima()">Próxima</button>
+    <tr *ngFor="let e of empresas">
+      <td>{{ e.id }}</td>
+      <td>{{ e.nomeEmpresa }}</td>
+      <td>{{ e.cnpj }}</td>
+      <td>
+        <button [routerLink]="['/empresas/edit', e.id]">Editar</button>
+        <button (click)="deletar(e.id!)">Excluir</button>
+      </td>
+    </tr>
+  </table>
+
+  <p *ngIf="!carregando && empresas.length === 0">
+    Nenhuma empresa encontrada.
+  </p>
+
+  <div>
+    <button (click)="anterior()" [disabled]="page === 0">Anterior</button>
+
+    <span>
+      Página {{ page + 1 }} de {{ totalPaginas() || 1 }}
+    </span>
+
+    <button
+      (click)="proxima()"
+      [disabled]="(page + 1) * pageSize >= total">
+      Próxima
+    </button>
+  </div>
 
 </div>

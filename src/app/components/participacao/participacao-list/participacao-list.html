@@ -1,34 +1,39 @@
-<h2>Participações (Feats)</h2>
+<div class="container">
 
-<table>
-  <tr>
-    <th>ID</th>
-    <th>Papel</th>
-    <th>Destaque</th>
-    <th>Faixa</th>
-    <th>Projetos</th>
-    <th>Ações</th>
-  </tr>
+  <h2>Participações</h2>
 
-  <tr *ngFor="let p of participacoes">
-    <td>{{p.id}}</td>
-    <td>{{p.papel}}</td>
-    <td>{{p.destaque ? 'Sim' : 'Não'}}</td>
-    <td>{{p.idFaixa}}</td>
+  <div>
+    <input [(ngModel)]="filtro" placeholder="Buscar por papel">
+    <button (click)="pesquisar()">Buscar</button>
+    <button (click)="novo()">Nova Participação</button>
+  </div>
 
-    <!--  nomes aqui -->
-    <td>{{ getProjetos(p.idsProjetoMusical) }}</td>
+  <p *ngIf="carregando">Carregando...</p>
+  <p *ngIf="mensagemErro">{{ mensagemErro }}</p>
 
-    <td>
-      <button [routerLink]="['/participacoes/edit', p.id]">Editar</button>
-      <button (click)="excluir(p.id)">Excluir</button>
-    </td>
-  </tr>
-</table>
+  <table *ngIf="!carregando">
+    <tr>
+      <th>ID</th>
+      <th>Papel</th>
+      <th>Destaque</th>
+      <th>Participantes</th>
+      <th>Ações</th>
+    </tr>
 
-<div style="margin-top: 10px;">
-  <button (click)="prev()">Anterior</button>
-  <button (click)="next()">Próximo</button>
+    <tr *ngFor="let p of participacoes">
+      <td>{{ p.id }}</td>
+      <td>{{ p.papel }}</td>
+      <td>{{ p.destaque ? 'Sim' : 'Não' }}</td>
+      <td>{{ getParticipantes(p) }}</td>
+      <td>
+        <button [routerLink]="['/participacoes/edit', p.id]">Editar</button>
+        <button (click)="excluir(p.id)">Excluir</button>
+      </td>
+    </tr>
+  </table>
+
+  <p *ngIf="!carregando && participacoes.length === 0">
+    Nenhuma participação encontrada.
+  </p>
+
 </div>
-
-<button [routerLink]="['/participacoes/new']">Nova Participação</button>

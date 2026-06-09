@@ -1,30 +1,56 @@
 <div class="container">
+
   <h2>Cadastro de Composição</h2>
 
-<form [formGroup]="form">
+  <p *ngIf="mensagemErro">{{ mensagemErro }}</p>
 
-  <input type="date" formControlName="data">
+  <form [formGroup]="form">
 
-  <label>Projetos Musicais</label>
+    <div>
+      <label>Data da composição</label>
+      <input type="date" formControlName="data">
 
-  <select multiple formControlName="projetos">
+      <small *ngIf="form.get('data')?.touched && form.get('data')?.hasError('required')">
+        A data é obrigatória.
+      </small>
+    </div>
 
-  <optgroup label="Artistas">
-    <option *ngFor="let a of artistas" [ngValue]="a">
-      {{a.nomeArtistico}}
-    </option>
-  </optgroup>
+    <div>
+      <label>Compositores / Projetos Musicais</label>
 
-  <optgroup label="Grupos">
-    <option *ngFor="let g of grupos" [ngValue]="g">
-      {{g.nomeGrupo}}
-    </option>
-  </optgroup>
+      <h4>Artistas</h4>
+      <div *ngFor="let a of artistas">
+        <label>
+          <input
+            type="checkbox"
+            [checked]="projetoSelecionado(a.id)"
+            (change)="toggleProjeto(a.id, $event)">
+          {{ a.nomeArtistico }}
+        </label>
+      </div>
 
-  </select>
+      <h4>Grupos</h4>
+      <div *ngFor="let g of grupos">
+        <label>
+          <input
+            type="checkbox"
+            [checked]="projetoSelecionado(g.id)"
+            (change)="toggleProjeto(g.id, $event)">
+          {{ g.nomeGrupo }}
+        </label>
+      </div>
 
-  <button type="button" (click)="cancelar()">Cancelar</button>
-  <button (click)="salvar()">Salvar</button>
+      <small *ngIf="form.get('idsProjetoMusical')?.touched && idsSelecionados.length === 0">
+        Selecione pelo menos um compositor.
+      </small>
+    </div>
 
-</form>
+    <button type="button" (click)="cancelar()">Cancelar</button>
+
+    <button type="button" (click)="salvar()" [disabled]="salvando">
+      {{ salvando ? 'Salvando...' : 'Salvar' }}
+    </button>
+
+  </form>
+
 </div>

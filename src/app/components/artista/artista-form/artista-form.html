@@ -1,21 +1,65 @@
 <div class="container">
-<h2>Cadastro de Artista</h2>
 
-<form [formGroup]="form">
+  <h2>Cadastro de Artista</h2>
 
-  <input formControlName="nomeCompleto" placeholder="Nome completo">
-  <input formControlName="nomeArtistico" placeholder="Nome artístico">
-  <input type="date" formControlName="dataNascimento">
-  <input formControlName="nacionalidade" placeholder="Nacionalidade">
-  <input formControlName="funcaoPrincipal" placeholder="Função">
+  <p *ngIf="mensagemErro">{{ mensagemErro }}</p>
 
-  <select formControlName="idEmpresa">
-  <option *ngFor="let e of empresas" [value]="e.id">
-    {{e.nomeEmpresa}}
-  </option>
-</select>
+  <form [formGroup]="form">
 
-<button type="button" (click)="cancelar()">Cancelar</button>
-  <button (click)="salvar()">Salvar</button>
-</form> 
+    <div>
+      <input formControlName="nomeCompleto" placeholder="Nome completo">
+      <small *ngIf="form.get('nomeCompleto')?.touched && form.get('nomeCompleto')?.hasError('required')">
+        O nome completo é obrigatório.
+      </small>
+    </div>
+
+    <div>
+      <input formControlName="nomeArtistico" placeholder="Nome artístico">
+      <small *ngIf="form.get('nomeArtistico')?.touched && form.get('nomeArtistico')?.hasError('required')">
+        O nome artístico é obrigatório.
+      </small>
+    </div>
+
+    <div>
+      <input type="date" formControlName="dataNascimento">
+      <small *ngIf="form.get('dataNascimento')?.touched && form.get('dataNascimento')?.hasError('required')">
+        A data de nascimento é obrigatória.
+      </small>
+    </div>
+
+    <div>
+      <input formControlName="nacionalidade" placeholder="Nacionalidade">
+      <small *ngIf="form.get('nacionalidade')?.touched && form.get('nacionalidade')?.hasError('required')">
+        A nacionalidade é obrigatória.
+      </small>
+    </div>
+
+    <div>
+      <input formControlName="funcaoPrincipal" placeholder="Função">
+      <small *ngIf="form.get('funcaoPrincipal')?.touched && form.get('funcaoPrincipal')?.hasError('required')">
+        A função principal é obrigatória.
+      </small>
+    </div>
+
+    <div>
+      <select formControlName="idEmpresa">
+        <option [ngValue]="null">Selecione uma empresa</option>
+        <option *ngFor="let e of empresas" [ngValue]="e.id">
+          {{ e.nomeEmpresa }}
+        </option>
+      </select>
+
+      <small *ngIf="form.get('idEmpresa')?.touched && form.get('idEmpresa')?.hasError('required')">
+        A empresa é obrigatória.
+      </small>
+    </div>
+
+    <button type="button" (click)="cancelar()">Cancelar</button>
+
+    <button type="button" (click)="salvar()" [disabled]="salvando">
+      {{ salvando ? 'Salvando...' : 'Salvar' }}
+    </button>
+
+  </form>
+
 </div>

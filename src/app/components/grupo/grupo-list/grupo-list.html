@@ -1,26 +1,53 @@
 <div class="container">
+
   <h2>Grupos Musicais</h2>
 
-<table>
-  <tr>
-    <th>ID</th>
-    <th>Nome</th>
-    <th>Empresa</th>
-    <th>Integrantes</th>
-    <th>Ações</th>
-  </tr>
-
-  <tr *ngFor="let g of grupos">
-    <td>{{g.id}}</td>
-    <td>{{g.nomeGrupo}}</td>
-    <td>{{g.empresa?.nomeEmpresa}}</td>
-    <td>{{ getNomesMembros(g.membros) }}</td>
-    <td>
-      <button [routerLink]="['/grupos/edit', g.id]">Editar</button>
-      <button (click)="deletar(g.id)">Excluir</button>
-    </td>
-  </tr>
-</table>
-
-<button [routerLink]="['/grupos/new']">Novo Grupo</button>
+  <div>
+    <input [(ngModel)]="filtro" placeholder="Buscar por nome do grupo">
+    <button (click)="pesquisar()">Buscar</button>
+    <button (click)="novo()">Novo Grupo</button>
   </div>
+
+  <p *ngIf="carregando">Carregando...</p>
+  <p *ngIf="mensagemErro">{{ mensagemErro }}</p>
+
+  <table *ngIf="!carregando">
+    <tr>
+      <th>ID</th>
+      <th>Nome</th>
+      <th>Empresa</th>
+      <th>Integrantes</th>
+      <th>Ações</th>
+    </tr>
+
+    <tr *ngFor="let g of grupos">
+      <td>{{ g.id }}</td>
+      <td>{{ g.nomeGrupo }}</td>
+      <td>{{ g.empresa?.nomeEmpresa }}</td>
+      <td>{{ getNomesMembros(g.membros) }}</td>
+      <td>
+        <button [routerLink]="['/grupos/edit', g.id]">Editar</button>
+        <button (click)="deletar(g.id)">Excluir</button>
+      </td>
+    </tr>
+  </table>
+
+  <p *ngIf="!carregando && grupos.length === 0">
+    Nenhum grupo encontrado.
+  </p>
+
+  <div>
+    <button (click)="anterior()" [disabled]="page === 0">Anterior</button>
+
+    <span>
+      Página {{ page + 1 }} de {{ totalPaginas() || 1 }}
+    </span>
+
+    <button
+      (click)="proxima()"
+      [disabled]="(page + 1) * pageSize >= total">
+      Próxima
+    </button>
+  </div>
+
+</div>

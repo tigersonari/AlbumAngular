@@ -1,16 +1,33 @@
 <div class="container">
 
-<h2>Cadastro de Gênero</h2>
+  <h2>Cadastro de Gênero</h2>
 
-<form [formGroup]="form">
+  <p *ngIf="mensagemErro">{{ mensagemErro }}</p>
 
-  <input formControlName="nomeGenero" placeholder="Nome">
+  <form [formGroup]="form">
 
-  <input formControlName="descricao" placeholder="Descrição">
+    <div>
+      <input formControlName="nomeGenero" placeholder="Nome">
 
-  <button type="button" (click)="cancelar()">Cancelar</button>
-<button type="button" (click)="salvar()">Salvar</button>
+      <small *ngIf="form.get('nomeGenero')?.touched && form.get('nomeGenero')?.hasError('required')">
+        O nome é obrigatório.
+      </small>
 
-</form>
+      <small *ngIf="form.get('nomeGenero')?.touched && form.get('nomeGenero')?.hasError('minlength')">
+        O nome deve ter pelo menos 2 caracteres.
+      </small>
+    </div>
+
+    <div>
+      <input formControlName="descricao" placeholder="Descrição">
+    </div>
+
+    <button type="button" (click)="cancelar()">Cancelar</button>
+
+    <button type="button" (click)="salvar()" [disabled]="salvando">
+      {{ salvando ? 'Salvando...' : 'Salvar' }}
+    </button>
+
+  </form>
 
 </div>

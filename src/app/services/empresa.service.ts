@@ -12,25 +12,21 @@ export class EmpresaService {
 
   constructor(private http: HttpClient) {}
 
-   findAll(page?: number, pageSize?: number): Observable<Empresa[]> {
-      let params = new HttpParams();
-  
-      if (page !== undefined && pageSize !== undefined) {
-        params = params
-          .set('page', page)
-          .set('pageSize', pageSize);
-      }
-  
-      return this.http.get<Empresa[]>(this.baseUrl, { params });
-    }
-  
-    count(): Observable<number> {
-      return this.http.get<number>(`${this.baseUrl}/count`);
-    }
-  
-    findByNome(nome: string): Observable<Empresa[]> {
-      return this.http.get<Empresa[]>(`${this.baseUrl}/find/nome/${nome}`);
-    }
+  findAll(page = 0, pageSize = 10): Observable<Empresa[]> {
+    const params = new HttpParams()
+      .set('page', page)
+      .set('pageSize', pageSize);
+
+    return this.http.get<Empresa[]>(this.baseUrl, { params });
+  }
+
+  count(): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/count`);
+  }
+
+  findByNome(nome: string): Observable<Empresa[]> {
+    return this.http.get<Empresa[]>(`${this.baseUrl}/find/nome/${encodeURIComponent(nome)}`);
+  }
 
   findById(id: number): Observable<Empresa> {
     return this.http.get<Empresa>(`${this.baseUrl}/${id}`);

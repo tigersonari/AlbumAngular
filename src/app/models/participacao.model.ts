@@ -3,6 +3,9 @@ export class Participacao {
   papel!: string;
   destaque!: boolean;
 
-  idFaixa!: number;
-  idsProjetoMusical!: number[];
+  participantes?: {
+    id: number;
+    nomeArtistico?: string;
+    nomeGrupo?: string;
+  }[];
 }

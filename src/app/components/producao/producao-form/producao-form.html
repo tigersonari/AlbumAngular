@@ -1,23 +1,67 @@
-<h2>Cadastro de Produção</h2>
+<div class="container">
 
-<form [formGroup]="form">
+  <h2>Cadastro de Produção</h2>
 
-  <input formControlName="produtor" placeholder="Produtor">
+  <p *ngIf="mensagemErro">{{ mensagemErro }}</p>
 
-  <input formControlName="engenheiroGravacao" placeholder="Eng. Gravação">
+  <form [formGroup]="form">
 
-  <input formControlName="engenheiroMixagem" placeholder="Eng. Mixagem">
+    <div>
+      <input formControlName="produtor" placeholder="Produtor">
+      <small *ngIf="form.get('produtor')?.touched && form.get('produtor')?.hasError('required')">
+        O produtor é obrigatório.
+      </small>
+    </div>
 
-  <input formControlName="engenheiroMasterizacao" placeholder="Eng. Masterização">
+    <div>
+      <input formControlName="engenheiroGravacao" placeholder="Eng. Gravação">
+      <small *ngIf="form.get('engenheiroGravacao')?.touched && form.get('engenheiroGravacao')?.hasError('required')">
+        O engenheiro de gravação é obrigatório.
+      </small>
+    </div>
 
-  <input type="date" formControlName="dataProducao">
+    <div>
+      <input formControlName="engenheiroMixagem" placeholder="Eng. Mixagem">
+      <small *ngIf="form.get('engenheiroMixagem')?.touched && form.get('engenheiroMixagem')?.hasError('required')">
+        O engenheiro de mixagem é obrigatório.
+      </small>
+    </div>
 
-  <select formControlName="idEmpresa">
-  <option value="">Selecione a empresa</option>
-  <option *ngFor="let e of empresas" [value]="e.id">
-    {{ e.nomeEmpresa }}
-  </option>
-</select>
+    <div>
+      <input formControlName="engenheiroMasterizacao" placeholder="Eng. Masterização">
+      <small *ngIf="form.get('engenheiroMasterizacao')?.touched && form.get('engenheiroMasterizacao')?.hasError('required')">
+        O engenheiro de masterização é obrigatório.
+      </small>
+    </div>
 
-  <button (click)="salvar()">Salvar</button>
-</form>
+    <div>
+      <label>Data da produção</label>
+      <input type="date" formControlName="dataProducao">
+      <small *ngIf="form.get('dataProducao')?.touched && form.get('dataProducao')?.hasError('required')">
+        A data da produção é obrigatória.
+      </small>
+    </div>
+
+    <div>
+      <label>Empresa</label>
+      <select formControlName="idEmpresa">
+        <option [ngValue]="null">Selecione a empresa</option>
+        <option *ngFor="let e of empresas" [ngValue]="e.id">
+          {{ e.nomeEmpresa }}
+        </option>
+      </select>
+
+      <small *ngIf="form.get('idEmpresa')?.touched && form.get('idEmpresa')?.hasError('required')">
+        A empresa é obrigatória.
+      </small>
+    </div>
+
+    <button type="button" (click)="cancelar()">Cancelar</button>
+
+    <button type="button" (click)="salvar()" [disabled]="salvando">
+      {{ salvando ? 'Salvando...' : 'Salvar' }}
+    </button>
+
+  </form>
+
+</div>

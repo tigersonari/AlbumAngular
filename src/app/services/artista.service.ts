@@ -26,8 +26,10 @@ count(): Observable<number> {
 }
 
   findByNomeArtistico(nome: string): Observable<Artista[]> {
-    return this.http.get<Artista[]>(`${this.baseUrl}/find/nome/${nome}`);
-  } /*pode dar problema por causa de resource no back*/ 
+  return this.http.get<Artista[]>(
+    `${this.baseUrl}/nome-artistico/${encodeURIComponent(nome)}`
+  );
+}
 
   findById(id: number): Observable<Artista> {
     return this.http.get<Artista>(`${this.baseUrl}/${id}`);

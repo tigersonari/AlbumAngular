@@ -1,24 +1,43 @@
 <div class="container">
-<h2>Composições</h2>
 
-<table>
-  <tr>
-    <th>ID</th>
-    <th>Data</th>
-    <th>Projetos</th>
-    <th>Ações</th>
-  </tr>
+  <h2>Composições</h2>
 
-  <tr *ngFor="let c of composicoes">
-    <td>{{c.id}}</td>
-    <td>{{c.data}}</td>
-    <td>{{ getProjetos(c) }}</td>
-    <td>
-      <button [routerLink]="['/composicoes/edit', c.id]">Editar</button>
-      <button (click)="excluir(c.id)">Excluir</button>
-    </td>
-  </tr>
-</table>
+  <div>
+  <input type="date" [(ngModel)]="filtroData">
+  <button (click)="pesquisar()">Buscar</button>
+  <button (click)="novo()">Nova Composição</button>
+</div>
 
-<button [routerLink]="['/composicoes/new']">Nova Composição</button>
+  <p *ngIf="carregando">Carregando...</p>
+  <p *ngIf="mensagemErro">{{ mensagemErro }}</p>
+
+  <table *ngIf="!carregando">
+    <tr>
+      <th>ID</th>
+      <th>Data</th>
+      <th>Compositores</th>
+      <th>Ações</th>
+    </tr>
+
+    <tr *ngFor="let c of composicoes">
+      <td>{{ c.id }}</td>
+      <td>{{ c.data }}</td>
+      <td>{{ getCompositores(c) }}</td>
+      <td>
+        <button [routerLink]="['/composicoes/edit', c.id]">Editar</button>
+        <button (click)="excluir(c.id)">Excluir</button>
+      </td>
+    </tr>
+  </table>
+
+  <p *ngIf="!carregando && composicoes.length === 0">
+    Nenhuma composição encontrada.
+  </p>
+
+  <div>
+    <button (click)="anterior()" [disabled]="page === 0">Anterior</button>
+    <span>Página {{ page + 1 }}</span>
+    <button (click)="proxima()" [disabled]="composicoes.length < pageSize">Próxima</button>
+  </div>
+
 </div>

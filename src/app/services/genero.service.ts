@@ -12,14 +12,10 @@ export class GeneroService {
 
   constructor(private http: HttpClient) {}
 
-  findAll(page?: number, pageSize?: number): Observable<Genero[]> {
-    let params = new HttpParams();
-
-    if (page !== undefined && pageSize !== undefined) {
-      params = params
-        .set('page', page)
-        .set('pageSize', pageSize);
-    }
+  findAll(page = 0, pageSize = 10): Observable<Genero[]> {
+    const params = new HttpParams()
+      .set('page', page)
+      .set('pageSize', pageSize);
 
     return this.http.get<Genero[]>(this.baseUrl, { params });
   }
@@ -29,7 +25,7 @@ export class GeneroService {
   }
 
   findByNome(nome: string): Observable<Genero[]> {
-    return this.http.get<Genero[]>(`${this.baseUrl}/find/nome/${nome}`);
+    return this.http.get<Genero[]>(`${this.baseUrl}/find/nome/${encodeURIComponent(nome)}`);
   }
 
   findById(id: number): Observable<Genero> {

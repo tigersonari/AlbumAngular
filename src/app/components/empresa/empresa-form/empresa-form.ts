@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { EmpresaService } from '../../../services/empresa.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -13,7 +13,9 @@ import { CommonModule } from '@angular/common';
 })
 export class EmpresaFormComponent implements OnInit {
 
-  form: any;
+  form!: FormGroup;
+  mensagemErro = '';
+  salvando = false;
 
   constructor(
     private fb: FormBuilder,
@@ -24,47 +26,62 @@ export class EmpresaFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-  id: [null],
-  nomeEmpresa: ['', Validators.required], 
-  cnpj: ['', Validators.required],
-  localizacao: [''],
-  contato: ['']
-});
+      id: [null],
+      nomeEmpresa: ['', [Validators.required, Validators.minLength(2)]],
+      cnpj: ['', Validators.required],
+      localizacao: [''],
+      contato: ['']
+    });
 
     const id = this.route.snapshot.params['id'];
 
     if (id) {
-      this.service.findById(id).subscribe(e => {
-        this.form.patchValue(e);
+      this.service.findById(Number(id)).subscribe({
+        next: (e) => this.form.patchValue(e),
+        error: () => this.mensagemErro = 'Erro ao carregar empresa.'
       });
     }
   }
 
-  cancelar() {
-  this.router.navigate(['/empresas']);
-}
-
-salvar() {
-  if (this.form.invalid) return;
-
-  const value = this.form.value;
-
-  if (value.id) {
-    this.service.update(value).subscribe(() => {
-      alert('Atualizado com sucesso!');
-      this.router.navigate(['/empresas']);
-    });
-  } else {
-    this.service.create(value).subscribe({
-  next: () => {
-    alert('Salvo com sucesso!');
+  cancelar(): void {
     this.router.navigate(['/empresas']);
-    setTimeout(() => window.location.reload(), 100);
-  },
-  error: () => {
-    alert('Erro ao salvar');
   }
-});
+
+  salvar(): void {
+    this.mensagemErro = '';
+
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    this.salvando = true;
+    const value = this.form.value;
+
+    if (value.id) {
+      this.service.update(value).subscribe({
+        next: () => {
+          alert('Atualizado com sucesso!');
+          this.router.navigate(['/empresas']);
+        },
+        error: (err: any) => {
+          console.error(err);
+          this.mensagemErro = 'Erro ao atualizar empresa. Verifique os dados.';
+          this.salvando = false;
+        }
+      });
+    } else {
+      this.service.create(value).subscribe({
+        next: () => {
+          alert('Criado com sucesso!');
+          this.router.navigate(['/empresas']);
+        },
+        error: (err: any) => {
+          console.error(err);
+          this.mensagemErro = 'Erro ao criar empresa. Verifique os dados.';
+          this.salvando = false;
+        }
+      });
+    }
   }
-}
 }

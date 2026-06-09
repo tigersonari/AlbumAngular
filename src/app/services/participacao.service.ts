@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Participacao } from '../models/participacao.model';
@@ -12,31 +12,27 @@ export class ParticipacaoService {
 
   constructor(private http: HttpClient) {}
 
-  findAll(page: number, pageSize: number): Observable<Participacao[]> {
-    const params = new HttpParams()
-      .set('page', page)
-      .set('pageSize', pageSize);
-
-    return this.http.get<Participacao[]>(this.baseUrl, { params });
+  findAll(): Observable<Participacao[]> {
+    return this.http.get<Participacao[]>(this.baseUrl);
   }
 
-  count(): Observable<number> {
-    return this.http.get<number>(`${this.baseUrl}/count`);
+  findByPapel(papel: string): Observable<Participacao[]> {
+    return this.http.get<Participacao[]>(`${this.baseUrl}/papel/${encodeURIComponent(papel)}`);
   }
 
   findById(id: number): Observable<Participacao> {
     return this.http.get<Participacao>(`${this.baseUrl}/${id}`);
   }
 
-  create(p: Participacao) {
-    return this.http.post(this.baseUrl, p);
+  create(p: any): Observable<Participacao> {
+    return this.http.post<Participacao>(this.baseUrl, p);
   }
 
-  update(p: Participacao) {
-    return this.http.put(`${this.baseUrl}/${p.id}`, p);
+  update(p: any): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/${p.id}`, p);
   }
 
-  delete(id: number) {
-    return this.http.delete(`${this.baseUrl}/${id}`);
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }

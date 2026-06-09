@@ -1,28 +1,76 @@
 <div class="container">
+
   <h2>Cadastro de Grupo</h2>
 
-<form [formGroup]="form">
+  <p *ngIf="mensagemErro">{{ mensagemErro }}</p>
 
-  <input formControlName="nomeGrupo" placeholder="Nome do grupo">
+  <form [formGroup]="form">
 
-  <input type="date" formControlName="dataInicio">
-  <input type="date" formControlName="dataTermino">
+    <div>
+      <input formControlName="nomeGrupo" placeholder="Nome do grupo">
 
-  <label>Empresa</label>
-<select formControlName="idEmpresa">
-  <option *ngFor="let e of empresas" [value]="e.id">
-    {{e.nomeEmpresa}}
-  </option>
-</select>
+      <small *ngIf="form.get('nomeGrupo')?.touched && form.get('nomeGrupo')?.hasError('required')">
+        O nome do grupo é obrigatório.
+      </small>
+    </div>
 
-<label>Integrantes</label>
-<select multiple formControlName="idsArtistas">
-  <option *ngFor="let a of artistas" [ngValue]="a.id">
-    {{a.nomeArtistico}}
-  </option>
-</select>
+    <div>
+      <label>Data de início</label>
+      <input type="date" formControlName="dataInicio">
 
-<button type="button" (click)="cancelar()">Cancelar</button>
-  <button (click)="salvar()">Salvar</button>
-</form>
+      <small *ngIf="form.get('dataInicio')?.touched && form.get('dataInicio')?.hasError('required')">
+        A data de início é obrigatória.
+      </small>
+    </div>
+
+    <div>
+      <label>Data de término</label>
+      <input type="date" formControlName="dataTermino">
+    </div>
+
+    <div>
+      <label>Empresa</label>
+
+      <select formControlName="idEmpresa">
+        <option [ngValue]="null">Selecione uma empresa</option>
+        <option *ngFor="let e of empresas" [ngValue]="e.id">
+          {{ e.nomeEmpresa }}
+        </option>
+      </select>
+
+      <small *ngIf="form.get('idEmpresa')?.touched && form.get('idEmpresa')?.hasError('required')">
+        A empresa é obrigatória.
+      </small>
+    </div>
+
+    <div>
+  <label>Integrantes</label>
+
+  <div *ngIf="artistas.length === 0">
+    Nenhum artista cadastrado.
+  </div>
+
+  <div *ngFor="let a of artistas">
+    <label>
+      <input
+        type="checkbox"
+        [checked]="artistaSelecionado(a.id)"
+        (change)="toggleArtista(a.id, $event)">
+      {{ a.nomeArtistico }}
+    </label>
+  </div>
+
+  <small *ngIf="form.get('idsArtistas')?.touched && idsArtistasSelecionados.length === 0">
+    Selecione pelo menos um integrante.
+  </small>
+</div>
+
+    <button type="button" (click)="cancelar()">Cancelar</button>
+
+    <button type="button" (click)="salvar()" [disabled]="salvando">
+      {{ salvando ? 'Salvando...' : 'Salvar' }}
+    </button>
+
+  </form>
+
 </div>

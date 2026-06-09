@@ -12,7 +12,7 @@ export class GrupoService {
 
   constructor(private http: HttpClient) {}
 
-  findAll(page: number, pageSize: number): Observable<Grupo[]> {
+  findAll(page = 0, pageSize = 10): Observable<Grupo[]> {
     const params = new HttpParams()
       .set('page', page)
       .set('pageSize', pageSize);
@@ -24,15 +24,27 @@ export class GrupoService {
     return this.http.get<number>(`${this.baseUrl}/count`);
   }
 
+  findByNome(nome: string): Observable<Grupo[]> {
+    return this.http.get<Grupo[]>(`${this.baseUrl}/nome/${encodeURIComponent(nome)}`);
+  }
+
+  findByEmpresa(idEmpresa: number): Observable<Grupo[]> {
+    return this.http.get<Grupo[]>(`${this.baseUrl}/empresa/${idEmpresa}`);
+  }
+
+  findMembros(idGrupo: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/${idGrupo}/membros`);
+  }
+
   findById(id: number): Observable<Grupo> {
     return this.http.get<Grupo>(`${this.baseUrl}/${id}`);
   }
 
-  create(g: Grupo): Observable<Grupo> {
+  create(g: any): Observable<Grupo> {
     return this.http.post<Grupo>(this.baseUrl, g);
   }
 
-  update(g: Grupo): Observable<void> {
+  update(g: any): Observable<void> {
     return this.http.put<void>(`${this.baseUrl}/${g.id}`, g);
   }
 

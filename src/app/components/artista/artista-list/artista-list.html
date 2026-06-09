@@ -1,38 +1,66 @@
 <div class="container">
-<h2>Artistas</h2>
 
-<select [(ngModel)]="empresaFiltro">
-  <option [ngValue]="null">Todas empresas</option>
-  <option *ngFor="let e of empresas" [value]="e.id">
-    {{e.nomeEmpresa}}
-  </option>
-</select>
+  <h2>Artistas</h2>
 
-<button (click)="buscarPorEmpresa()">Filtrar</button>
+  <div>
+    <input [(ngModel)]="filtro" placeholder="Buscar por nome artístico">
+    <button (click)="pesquisar()">Buscar</button>
+    <button (click)="novo()">Novo</button>
+  </div>
 
-<!-- <input [(ngModel)]="filtro" placeholder="Buscar por nome">
-<button (click)="pesquisar()">Buscar</button> -->
+  <div>
+    <select [(ngModel)]="empresaFiltro">
+      <option [ngValue]="null">Todas empresas</option>
+      <option *ngFor="let e of empresas" [ngValue]="e.id">
+        {{ e.nomeEmpresa }}
+      </option>
+    </select>
 
-<table>
-  <tr>
-    <th>ID</th>
-    <th>Nome</th>
-    <th>Função</th>
-    <th>Empresa</th>
-    <th>Ações</th>
-  </tr>
+    <button (click)="buscarPorEmpresa()">Filtrar</button>
+  </div>
 
-  <tr *ngFor="let a of artistas">
-    <td>{{a.id}}</td>
-    <td>{{a.nomeArtistico}}</td>
-    <td>{{a.funcaoPrincipal}}</td>
-    <td>{{a.empresa?.nomeEmpresa}}</td>
-    <td>
-      <button [routerLink]="['/artistas/edit', a.id]">Editar</button>
-      <button (click)="deletar(a.id)">Excluir</button>
-    </td>
-  </tr>
-</table>
+  <p *ngIf="carregando">Carregando...</p>
+  <p *ngIf="mensagemErro">{{ mensagemErro }}</p>
 
-<button [routerLink]="['/artistas/new']">Novo</button>
-</div> 
+  <table *ngIf="!carregando">
+    <tr>
+      <th>ID</th>
+      <th>Nome artístico</th>
+      <th>Nome completo</th>
+      <th>Função</th>
+      <th>Empresa</th>
+      <th>Ações</th>
+    </tr>
+
+    <tr *ngFor="let a of artistas">
+      <td>{{ a.id }}</td>
+      <td>{{ a.nomeArtistico }}</td>
+      <td>{{ a.nomeCompleto }}</td>
+      <td>{{ a.funcaoPrincipal }}</td>
+      <td>{{ a.empresa?.nomeEmpresa }}</td>
+      <td>
+        <button [routerLink]="['/artistas/edit', a.id]">Editar</button>
+        <button (click)="deletar(a.id)">Excluir</button>
+      </td>
+    </tr>
+  </table>
+
+  <p *ngIf="!carregando && artistas.length === 0">
+    Nenhum artista encontrado.
+  </p>
+
+  <div>
+    <button (click)="anterior()" [disabled]="page === 0">Anterior</button>
+
+    <span>
+      Página {{ page + 1 }} de {{ totalPaginas() || 1 }}
+    </span>
+
+    <button
+      (click)="proxima()"
+      [disabled]="(page + 1) * pageSize >= total">
+      Próxima
+    </button>
+  </div>
+
+</div>

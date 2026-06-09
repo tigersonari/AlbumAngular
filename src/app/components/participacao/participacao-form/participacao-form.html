@@ -1,17 +1,62 @@
-<h2>Cadastro de Participação</h2>
+<div class="container">
 
-<form [formGroup]="form">
+  <h2>Cadastro de Participação</h2>
 
-  <input formControlName="papel" placeholder="Papel">
+  <p *ngIf="mensagemErro">{{ mensagemErro }}</p>
 
-  <label>
-    <input type="checkbox" formControlName="destaque">
-    Destaque
-  </label>
+  <form [formGroup]="form">
 
-  <input type="number" formControlName="idFaixa" placeholder="ID da Faixa">
+    <div>
+      <input formControlName="papel" placeholder="Papel">
 
-  <input type="text" formControlName="idsProjetoMusical" placeholder="IDs Projetos (ex: 1,2)">
+      <small *ngIf="form.get('papel')?.touched && form.get('papel')?.hasError('required')">
+        O papel é obrigatório.
+      </small>
+    </div>
 
-  <button (click)="salvar()">Salvar</button>
-</form>
+    <div>
+      <label>
+        <input type="checkbox" formControlName="destaque">
+        Destaque
+      </label>
+    </div>
+
+    <div>
+      <label>Participantes</label>
+
+      <h4>Artistas</h4>
+      <div *ngFor="let a of artistas">
+        <label>
+          <input
+            type="checkbox"
+            [checked]="projetoSelecionado(a.id)"
+            (change)="toggleProjeto(a.id, $event)">
+          {{ a.nomeArtistico }}
+        </label>
+      </div>
+
+      <h4>Grupos</h4>
+      <div *ngFor="let g of grupos">
+        <label>
+          <input
+            type="checkbox"
+            [checked]="projetoSelecionado(g.id)"
+            (change)="toggleProjeto(g.id, $event)">
+          {{ g.nomeGrupo }}
+        </label>
+      </div>
+
+      <small *ngIf="form.get('idsProjetoMusical')?.touched && idsSelecionados.length === 0">
+        Selecione pelo menos um participante.
+      </small>
+    </div>
+
+    <button type="button" (click)="cancelar()">Cancelar</button>
+
+    <button type="button" (click)="salvar()" [disabled]="salvando">
+      {{ salvando ? 'Salvando...' : 'Salvar' }}
+    </button>
+
+  </form>
+
+</div>

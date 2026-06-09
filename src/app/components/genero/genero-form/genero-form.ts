@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { GeneroService } from '../../../services/genero.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -13,7 +13,9 @@ import { CommonModule } from '@angular/common';
 })
 export class GeneroFormComponent implements OnInit {
 
-  form: any;
+  form!: FormGroup;
+  mensagemErro = '';
+  salvando = false;
 
   constructor(
     private fb: FormBuilder,
@@ -25,37 +27,58 @@ export class GeneroFormComponent implements OnInit {
   ngOnInit(): void {
     this.form = this.fb.group({
       id: [null],
-      nomeGenero: ['', Validators.required],
+      nomeGenero: ['', [Validators.required, Validators.minLength(2)]],
       descricao: ['']
     });
 
     const id = this.route.snapshot.params['id'];
 
     if (id) {
-      this.service.findById(id).subscribe(g => {
-        this.form.patchValue(g);
+      this.service.findById(Number(id)).subscribe({
+        next: (g) => this.form.patchValue(g),
+        error: () => this.mensagemErro = 'Erro ao carregar gênero.'
       });
     }
   }
 
-  cancelar() {
-  this.router.navigate(['/generos']);
-}
+  cancelar(): void {
+    this.router.navigate(['/generos']);
+  }
 
-salvar() {
-  if (this.form.invalid) return;
+  salvar(): void {
+  this.mensagemErro = '';
 
+  if (this.form.invalid) {
+    this.form.markAllAsTouched();
+    return;
+  }
+
+  this.salvando = true;
   const value = this.form.value;
 
   if (value.id) {
-    this.service.update(value).subscribe(() => {
-      alert('Atualizado com sucesso!');
-      this.router.navigate(['/generos']);
+    this.service.update(value).subscribe({
+      next: () => {
+        alert('Atualizado com sucesso!');
+        this.router.navigate(['/generos']);
+      },
+      error: (err: any) => {
+        console.error(err);
+        this.mensagemErro = 'Erro ao atualizar gênero. Verifique os dados.';
+        this.salvando = false;
+      }
     });
   } else {
-    this.service.create(value).subscribe(() => {
-      alert('Criado com sucesso!');
-      this.router.navigate(['/generos']);
+    this.service.create(value).subscribe({
+      next: () => {
+        alert('Criado com sucesso!');
+        this.router.navigate(['/generos']);
+      },
+      error: (err: any) => {
+        console.error(err);
+        this.mensagemErro = 'Erro ao criar gênero. Verifique os dados.';
+        this.salvando = false;
+      }
     });
   }
 }

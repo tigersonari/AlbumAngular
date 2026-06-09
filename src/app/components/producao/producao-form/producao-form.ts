@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { ProducaoService } from '../../../services/producao.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-
 import { EmpresaService } from '../../../services/empresa.service';
 import { Empresa } from '../../../models/empresa.model';
 
@@ -16,8 +15,11 @@ import { Empresa } from '../../../models/empresa.model';
 })
 export class ProducaoFormComponent implements OnInit {
 
-  form: any;
+  form!: FormGroup;
   empresas: Empresa[] = [];
+
+  mensagemErro = '';
+  salvando = false;
 
   constructor(
     private fb: FormBuilder,
@@ -31,37 +33,88 @@ export class ProducaoFormComponent implements OnInit {
     this.form = this.fb.group({
       id: [null],
       produtor: ['', Validators.required],
-      engenheiroGravacao: [''],
-      engenheiroMixagem: [''],
-      engenheiroMasterizacao: [''],
+      engenheiroGravacao: ['', Validators.required],
+      engenheiroMixagem: ['', Validators.required],
+      engenheiroMasterizacao: ['', Validators.required],
       dataProducao: ['', Validators.required],
       idEmpresa: [null, Validators.required]
     });
 
-    this.empresaService.findAll(0,100).subscribe(data => {
-  this.empresas = data;
-});
+    this.empresaService.findAll(0, 100).subscribe({
+      next: (data) => this.empresas = data,
+      error: () => this.mensagemErro = 'Erro ao carregar empresas.'
+    });
 
     const id = this.route.snapshot.params['id'];
 
     if (id) {
-      this.service.findById(id).subscribe(p => {
-        this.form.patchValue(p);
+      this.service.findById(Number(id)).subscribe({
+        next: (p) => {
+          this.form.patchValue({
+            id: p.id,
+            produtor: p.produtor,
+            engenheiroGravacao: p.engenheiroGravacao,
+            engenheiroMixagem: p.engenheiroMixagem,
+            engenheiroMasterizacao: p.engenheiroMasterizacao,
+            dataProducao: p.dataProducao,
+            idEmpresa: p.empresa?.id
+          });
+        },
+        error: () => this.mensagemErro = 'Erro ao carregar produção.'
       });
     }
   }
 
-  salvar() {
-    if (this.form.invalid) return;
+  cancelar(): void {
+    this.router.navigate(['/producoes']);
+  }
+
+  salvar(): void {
+    this.mensagemErro = '';
+
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    this.salvando = true;
 
     const value = this.form.value;
 
+    const payload = {
+      id: value.id,
+      produtor: value.produtor,
+      engenheiroGravacao: value.engenheiroGravacao,
+      engenheiroMixagem: value.engenheiroMixagem,
+      engenheiroMasterizacao: value.engenheiroMasterizacao,
+      dataProducao: value.dataProducao,
+      idEmpresa: Number(value.idEmpresa)
+    };
+
     if (value.id) {
-      this.service.update(value)
-        .subscribe(() => this.router.navigate(['/producoes']));
+      this.service.update(payload).subscribe({
+        next: () => {
+          alert('Atualizado com sucesso!');
+          this.router.navigate(['/producoes']);
+        },
+        error: (err: any) => {
+          console.error(err);
+          this.mensagemErro = 'Erro ao atualizar produção. Verifique os dados.';
+          this.salvando = false;
+        }
+      });
     } else {
-      this.service.create(value)
-        .subscribe(() => this.router.navigate(['/producoes']));
+      this.service.create(payload).subscribe({
+        next: () => {
+          alert('Criado com sucesso!');
+          this.router.navigate(['/producoes']);
+        },
+        error: (err: any) => {
+          console.error(err);
+          this.mensagemErro = 'Erro ao criar produção. Verifique os dados.';
+          this.salvando = false;
+        }
+      });
     }
   }
 }

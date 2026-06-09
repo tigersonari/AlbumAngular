@@ -12,28 +12,31 @@ export class ComposicaoService {
 
   constructor(private http: HttpClient) {}
 
-  findAll(page: number, pageSize: number): Observable<Composicao[]> {
-  const params = new HttpParams()
-    .set('page', page)
-    .set('pageSize', pageSize);
+  findAll(page = 0, pageSize = 10): Observable<Composicao[]> {
+    const params = new HttpParams()
+      .set('page', page)
+      .set('pageSize', pageSize);
 
-  return this.http.get<Composicao[]>(this.baseUrl, { params });
-}
+    return this.http.get<Composicao[]>(this.baseUrl, { params });
+  }
 
-count(): Observable<number> {
-  return this.http.get<number>(`${this.baseUrl}/count`);
-}
-
+  count(): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/count`);
+  }
 
   findById(id: number): Observable<Composicao> {
     return this.http.get<Composicao>(`${this.baseUrl}/${id}`);
   }
 
-  create(c: Composicao): Observable<Composicao> {
+  findByData(data: string): Observable<Composicao[]> {
+  return this.http.get<Composicao[]>(`${this.baseUrl}/data/${data}`);
+}
+
+  create(c: any): Observable<Composicao> {
     return this.http.post<Composicao>(this.baseUrl, c);
   }
 
-  update(c: Composicao): Observable<void> {
+  update(c: any): Observable<void> {
     return this.http.put<void>(`${this.baseUrl}/${c.id}`, c);
   }
 

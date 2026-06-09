@@ -6,8 +6,6 @@ import { Empresa } from '../../../models/empresa.model';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ProjetoMusicalService } from '../../../services/projetomusical.service';
-
 
 @Component({
   selector: 'app-artista-list',
@@ -18,73 +16,136 @@ import { ProjetoMusicalService } from '../../../services/projetomusical.service'
 })
 export class ArtistaListComponent implements OnInit {
 
-    page = 0;
-    pageSize = 10;
-    total = 0;
+  page = 0;
+  pageSize = 10;
+  total = 0;
 
   artistas: Artista[] = [];
   empresas: Empresa[] = [];
+
   filtro = '';
-
-  projetos: any[] = [];
-projetoFiltro: number | null = null;
-
-
   empresaFiltro: number | null = null;
+
+  carregando = false;
+  mensagemErro = '';
 
   constructor(
     private service: ArtistaService,
     private empresaService: EmpresaService,
-    private router: Router,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.loadData();
-    this.empresaService.findAll(0, 100).subscribe(e => this.empresas = e);
+    this.empresaService.findAll(0, 100).subscribe({
+      next: (e) => this.empresas = e,
+      error: () => this.mensagemErro = 'Erro ao carregar empresas.'
+    });
   }
 
-  loadData() {
-  this.service.findAll(this.page, this.pageSize)
-    .subscribe(data => this.artistas = data);
+  loadData(): void {
+    this.carregando = true;
+    this.mensagemErro = '';
 
-  this.service.count()
-    .subscribe(c => this.total = c);
-}
+    this.service.findAll(this.page, this.pageSize).subscribe({
+      next: (data) => {
+        this.artistas = data;
+        this.carregando = false;
+      },
+      error: () => {
+        this.mensagemErro = 'Erro ao carregar artistas.';
+        this.carregando = false;
+      }
+    });
 
-  buscarPorEmpresa() {
+    this.service.count().subscribe({
+      next: (c) => this.total = c,
+      error: () => this.total = 0
+    });
+  }
+
+  buscarPorEmpresa(): void {
     if (!this.empresaFiltro) {
+      this.page = 0;
       this.loadData();
       return;
-    } 
+    }
 
-    this.service.findByEmpresa(this.empresaFiltro)
-      .subscribe(data => this.artistas = data);
+    this.carregando = true;
+    this.mensagemErro = '';
+
+    this.service.findByEmpresa(this.empresaFiltro).subscribe({
+      next: (data) => {
+        this.artistas = data;
+        this.page = 0;
+        this.total = data.length;
+        this.carregando = false;
+      },
+      error: () => {
+        this.mensagemErro = 'Erro ao filtrar por empresa.';
+        this.carregando = false;
+      }
+    });
   }
 
-  pesquisar() {
-    if (!this.filtro) return this.loadData();
+  pesquisar(): void {
+    const termo = this.filtro.trim();
 
-    this.service.findByNomeArtistico(this.filtro)
-      .subscribe((data: Artista[]) => this.artistas = data);
-  } 
+    if (!termo) {
+      this.page = 0;
+      this.loadData();
+      return;
+    }
 
-  deletar(id: number) {
-    this.service.delete(id).subscribe(() => this.loadData());
+    this.carregando = true;
+    this.mensagemErro = '';
+
+    this.service.findByNomeArtistico(termo).subscribe({
+      next: (data) => {
+        this.artistas = data;
+        this.page = 0;
+        this.total = data.length;
+        this.carregando = false;
+      },
+      error: () => {
+        this.mensagemErro = 'Erro ao pesquisar artista.';
+        this.carregando = false;
+      }
+    });
   }
 
-  novo() {
+  deletar(id: number): void {
+    if (!confirm('Deseja realmente excluir este artista?')) {
+      return;
+    }
+
+    this.service.delete(id).subscribe({
+      next: () => this.loadData(),
+      error: () => this.mensagemErro = 'Erro ao excluir artista.'
+    });
+  }
+
+  novo(): void {
     this.router.navigate(['/artistas/new']);
   }
 
- proxima() {
-  this.page++;
-  this.loadData();
-}
+  proxima(): void {
+    if ((this.page + 1) * this.pageSize >= this.total) {
+      return;
+    }
 
-anterior() {
-  if (this.page > 0) {
-    this.page--;
+    this.page++;
     this.loadData();
   }
-}
+
+  anterior(): void {
+    if (this.page > 0) {
+      this.page--;
+      this.loadData();
+    }
+  }
+
+  totalPaginas(): number {
+    return Math.ceil(this.total / this.pageSize);
+  }
 }

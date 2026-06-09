@@ -12,35 +12,33 @@ export class ProducaoService {
 
   constructor(private http: HttpClient) {}
 
-  findAll(page?: number, pageSize?: number): Observable<any[]> {
-    let params = new HttpParams();
+  findAll(page = 0, pageSize = 10): Observable<Producao[]> {
+    const params = new HttpParams()
+      .set('page', page)
+      .set('pageSize', pageSize);
 
-    if (page !== undefined && pageSize !== undefined) {
-      params = params
-        .set('page', page)
-        .set('pageSize', pageSize);
-    }
-
-    return this.http.get<any[]>(this.baseUrl, { params });
+    return this.http.get<Producao[]>(this.baseUrl, { params });
   }
 
-  count(): Observable<number> {
-    return this.http.get<number>(`${this.baseUrl}/count`);
+  findByProdutor(nome: string): Observable<Producao[]> {
+    return this.http.get<Producao[]>(
+      `${this.baseUrl}/find/produtor/${encodeURIComponent(nome)}`
+    );
   }
 
-  findById(id: number) {
-    return this.http.get<any>(`${this.baseUrl}/${id}`);
+  findById(id: number): Observable<Producao> {
+    return this.http.get<Producao>(`${this.baseUrl}/${id}`);
   }
 
-  create(p: any) {
-    return this.http.post(this.baseUrl, p);
+  create(p: any): Observable<Producao> {
+    return this.http.post<Producao>(this.baseUrl, p);
   }
 
-  update(p: any) {
-    return this.http.put(`${this.baseUrl}/${p.id}`, p);
+  update(p: any): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/${p.id}`, p);
   }
 
-  delete(id: number) {
-    return this.http.delete(`${this.baseUrl}/${id}`);
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }

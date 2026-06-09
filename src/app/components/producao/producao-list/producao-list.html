@@ -1,28 +1,49 @@
-<h2>Produções</h2>
+<div class="container">
 
-<table>
-  <tr>
-    <th>ID</th>
-    <th>Produtor</th>
-    <th>Eng. Gravação</th>
-    <th>Eng. Mixagem</th>
-    <th>Eng. Masterização</th>
-    <th>Empresa</th>
-    <th>Ações</th>
-  </tr>
+  <h2>Produções</h2>
 
-  <tr *ngFor="let p of producoes">
-    <td>{{p.id}}</td>
-    <td>{{p.produtor}}</td>
-    <td>{{p.engenheiroGravacao}}</td>
-    <td>{{p.engenheiroMixagem}}</td>
-    <td>{{p.engenheiroMasterizacao}}</td>
-    <!-- <td>{{ getNomeEmpresa(p.idEmpresa) }}</td> -->
-    <td>
-      <button [routerLink]="['/producoes/edit', p.id]">Editar</button>
-      <button (click)="deletar(p.id)">Excluir</button>
-    </td>
-  </tr>
-</table>
+  <div>
+    <input [(ngModel)]="filtro" placeholder="Buscar por produtor">
+    <button (click)="pesquisar()">Buscar</button>
+    <button (click)="novo()">Nova Produção</button>
+  </div>
 
-<button [routerLink]="['/producoes/new']">Nova Produção</button>
+  <p *ngIf="carregando">Carregando...</p>
+  <p *ngIf="mensagemErro">{{ mensagemErro }}</p>
+
+  <table *ngIf="!carregando">
+    <tr>
+      <th>ID</th>
+      <th>Produtor</th>
+      <th>Eng. Gravação</th>
+      <th>Eng. Mixagem</th>
+      <th>Eng. Masterização</th>
+      <th>Empresa</th>
+      <th>Ações</th>
+    </tr>
+
+    <tr *ngFor="let p of producoes">
+      <td>{{ p.id }}</td>
+      <td>{{ p.produtor }}</td>
+      <td>{{ p.engenheiroGravacao }}</td>
+      <td>{{ p.engenheiroMixagem }}</td>
+      <td>{{ p.engenheiroMasterizacao }}</td>
+      <td>{{ p.empresa?.nomeEmpresa || '-' }}</td>
+      <td>
+        <button [routerLink]="['/producoes/edit', p.id]">Editar</button>
+        <button (click)="deletar(p.id)">Excluir</button>
+      </td>
+    </tr>
+  </table>
+
+  <p *ngIf="!carregando && producoes.length === 0">
+    Nenhuma produção encontrada.
+  </p>
+
+  <div>
+    <button (click)="anterior()" [disabled]="page === 0">Anterior</button>
+    <span>Página {{ page + 1 }}</span>
+    <button (click)="proxima()" [disabled]="producoes.length < pageSize">Próxima</button>
+  </div>
+
+</div>

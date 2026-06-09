@@ -7,14 +7,16 @@ import { Composicao } from '../../../models/composicao.model';
 import { Artista } from '../../../models/artista.model';
 import { Grupo } from '../../../models/grupo.model';
 
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+
 
 
 @Component({
   selector: 'app-composicao-list',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './composicao-list.html',
   styleUrls: ['./composicao-list.css']
 })
@@ -23,6 +25,9 @@ export class ComposicaoListComponent implements OnInit {
   composicoes: Composicao[] = [];
   artistas: Artista[] = [];
   grupos: Grupo[] = [];
+  carregando = false;
+  mensagemErro = '';
+  filtroData = '';
 
   page = 0;
   pageSize = 10;
@@ -45,24 +50,53 @@ export class ComposicaoListComponent implements OnInit {
       .subscribe(g => this.grupos = g);
   }
 
-  loadData() {
-  this.service.findAll(this.page, this.pageSize)
-    .subscribe({
-      next: data => this.composicoes = data,
-      error: () => alert('Erro ao carregar composições')
-    });
+  loadData(): void {
+  this.carregando = true;
+  this.mensagemErro = '';
 
-  this.service.count()
-    .subscribe({
-      next: c => this.total = c,
-      error: () => alert('Erro ao contar composições')
-    });
+  this.service.findAll(this.page, this.pageSize).subscribe({
+    next: (data) => {
+      this.composicoes = data;
+      this.carregando = false;
+    },
+    error: () => {
+      this.mensagemErro = 'Erro ao carregar composições.';
+      this.carregando = false;
+    }
+  });
+
+  this.service.count().subscribe({
+    next: (c) => this.total = c,
+    error: () => this.total = 0
+  });
 }
 
-getProjetos(c: any): string {
-  return c.projetos
+pesquisar(): void {
+  if (!this.filtroData) {
+    this.page = 0;
+    this.loadData();
+    return;
+  }
+
+  this.carregando = true;
+  this.mensagemErro = '';
+
+  this.service.findByData(this.filtroData).subscribe({
+    next: (data) => {
+      this.composicoes = data;
+      this.carregando = false;
+    },
+    error: () => {
+      this.mensagemErro = 'Erro ao pesquisar composição.';
+      this.carregando = false;
+    }
+  });
+}
+
+getCompositores(c: any): string {
+  return c.compositores
     ?.map((p: any) => p.nomeArtistico || p.nomeGrupo)
-    .join(', ') || '';
+    .join(', ') || 'Sem compositores';
 }
 
 excluir(id: number) {

@@ -5,5 +5,11 @@ export class Producao {
   engenheiroMixagem!: string;
   engenheiroMasterizacao!: string;
   dataProducao!: string;
-  idEmpresa!: number;
+
+  idEmpresa?: number;
+
+  empresa?: {
+    id: number;
+    nomeEmpresa: string;
+  };
 }

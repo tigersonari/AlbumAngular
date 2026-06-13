@@ -1,0 +1,35 @@
+<div class="container login-container">
+
+  <h2>Login</h2>
+
+  <p *ngIf="mensagemErro">{{ mensagemErro }}</p>
+
+  <form>
+
+    <input
+      name="login"
+      [(ngModel)]="login"
+      placeholder="Login">
+
+    <input
+      name="senha"
+      [(ngModel)]="senha"
+      type="password"
+      placeholder="Senha">
+
+      <a routerLink="/esqueci-senha">
+    Esqueci minha senha
+      </a>
+
+    <button type="button" (click)="entrar()" [disabled]="carregando">
+      {{ carregando ? 'Entrando...' : 'Entrar' }}
+    </button>
+
+  </form>
+
+  <p>
+    Não tem conta?
+    <a routerLink="/cadastro">Cadastre-se</a>
+  </p>
+
+</div>

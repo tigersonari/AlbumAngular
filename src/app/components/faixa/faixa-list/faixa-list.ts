@@ -1,67 +1,127 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FaixaService } from '../../../services/faixa.service';
-import { AlbumService } from '../../../services/album.service';
-import { GeneroService } from '../../../services/genero.service';
-
 import { Faixa } from '../../../models/faixa.model';
-import { Album } from '../../../models/album.model';
-import { Genero } from '../../../models/genero.model';
-
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-faixa-list',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './faixa-list.html',
   styleUrls: ['./faixa-list.css']
 })
 export class FaixaListComponent implements OnInit {
 
   faixas: Faixa[] = [];
-  albuns: Album[] = [];
-  generos: Genero[] = [];
+  filtro = '';
 
   page = 0;
   pageSize = 10;
   total = 0;
 
+  carregando = false;
+  mensagemErro = '';
+
   constructor(
     private service: FaixaService,
-    private albumService: AlbumService,
-    private generoService: GeneroService
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.loadData();
-
-    this.albumService.findAll(0, 100).subscribe(a => this.albuns = a);
-    this.generoService.findAll().subscribe(g => this.generos = g);
   }
 
-  loadData() {
-    this.service.findAll(this.page, this.pageSize)
-      .subscribe(data => this.faixas = data);
+  loadData(): void {
+    this.carregando = true;
+    this.mensagemErro = '';
 
-    this.service.count()
-      .subscribe(c => this.total = c);
+    this.service.findAll(this.page, this.pageSize).subscribe({
+      next: (data) => {
+        this.faixas = data;
+        this.carregando = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.mensagemErro = 'Erro ao carregar faixas.';
+        this.carregando = false;
+      }
+    });
+
+    this.service.count().subscribe({
+      next: (c) => this.total = c,
+      error: () => this.total = 0
+    });
   }
 
-  excluir(id: number) {
-    this.service.delete(id).subscribe(() => this.loadData());
+  pesquisar(): void {
+    const termo = this.filtro.trim();
+
+    if (!termo) {
+      this.page = 0;
+      this.loadData();
+      return;
+    }
+
+    this.carregando = true;
+    this.mensagemErro = '';
+
+    this.service.findByTitulo(termo).subscribe({
+      next: (data) => {
+        this.faixas = data;
+        this.page = 0;
+        this.total = data.length;
+        this.carregando = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.mensagemErro = 'Erro ao pesquisar faixa.';
+        this.carregando = false;
+      }
+    });
   }
 
-  getNomeAlbum(id: number) {
-    return this.albuns.find(a => a.id === id)?.titulo || '';
+  excluir(id: number): void {
+    if (!confirm('Deseja excluir esta faixa?')) return;
+
+    this.service.delete(id).subscribe({
+      next: () => {
+        this.loadData();
+      },
+      error: () => this.mensagemErro = 'Erro ao excluir faixa.'
+    });
   }
 
-  getNomeGenero(id: number) {
-    return this.generos.find(g => g.id === id)?.nomeGenero || '';
+  novo(): void {
+    this.router.navigate(['/faixas/new']);
   }
 
-  getTipoVersao(tipo: number) {
-    const tipos = ['Original', 'Remix', 'Ao Vivo'];
-    return tipos[tipo - 1] || '';
+  proxima(): void {
+    if ((this.page + 1) * this.pageSize >= this.total) return;
+    this.page++;
+    this.loadData();
   }
+
+  anterior(): void {
+    if (this.page > 0) {
+      this.page--;
+      this.loadData();
+    }
+  }
+
+  totalPaginas(): number {
+    return Math.ceil(this.total / this.pageSize);
+  }
+
+  getTipoVersao(tipo: any): string {
+  if (!tipo) return '';
+
+  if (typeof tipo === 'string') {
+    return tipo;
+  }
+
+  return tipo.label || tipo.nome || tipo.name || tipo.descricao || tipo.toString?.() || '';
+}
 }

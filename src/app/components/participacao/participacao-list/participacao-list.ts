@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ParticipacaoService } from '../../../services/participacao.service';
 import { Participacao } from '../../../models/participacao.model';
 import { CommonModule } from '@angular/common';
@@ -22,7 +22,8 @@ export class ParticipacaoListComponent implements OnInit {
 
   constructor(
     private service: ParticipacaoService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -37,6 +38,7 @@ export class ParticipacaoListComponent implements OnInit {
       next: (data) => {
         this.participacoes = data;
         this.carregando = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.mensagemErro = 'Erro ao carregar participações.';
@@ -60,6 +62,7 @@ export class ParticipacaoListComponent implements OnInit {
       next: (data) => {
         this.participacoes = data;
         this.carregando = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.mensagemErro = 'Erro ao pesquisar participação.';
@@ -80,7 +83,9 @@ export class ParticipacaoListComponent implements OnInit {
     }
 
     this.service.delete(id).subscribe({
-      next: () => this.loadData(),
+      next: () => {
+        this.loadData();
+      },
       error: () => this.mensagemErro = 'Erro ao excluir participação.'
     });
   }

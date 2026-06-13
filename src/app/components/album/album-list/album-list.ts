@@ -1,14 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AlbumService } from '../../../services/album.service';
-import { ProducaoService } from '../../../services/producao.service';
-import { ProjetoMusicalService } from '../../../services/projetomusical.service';
-
 import { Album } from '../../../models/album.model';
-
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { FaixaService } from '../../../services/faixa.service';
 
 @Component({
   selector: 'app-album-list',
@@ -20,83 +15,127 @@ import { FaixaService } from '../../../services/faixa.service';
 export class AlbumListComponent implements OnInit {
 
   albuns: Album[] = [];
-  producoes: any[] = [];
-  projetos: any[] = [];
-  faixas: any[] = [];
-  generos: any[] = [];
-  faixasPorAlbum: { [key: number]: any[] } = {};
-
   filtro = '';
 
   page = 0;
   pageSize = 10;
   total = 0;
 
+  carregando = false;
+  mensagemErro = '';
+
   constructor(
     private service: AlbumService,
-    private producaoService: ProducaoService,
-    private projetoService: ProjetoMusicalService,
-    private faixaService: FaixaService
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.loadData();
-
-    this.producaoService.findAll(0, 100)
-      .subscribe(p => this.producoes = p);
-
-    this.projetoService.findAll(0, 100)
-      .subscribe(p => this.projetos = p);
   }
 
-  loadData() {
-  this.service.findAll(this.page, this.pageSize)
-    .subscribe(data => {
-      this.albuns = data;
+  loadData(): void {
+    this.carregando = true;
+    this.mensagemErro = '';
 
-      
-      this.albuns.forEach(a => {
-        this.loadFaixas(a.id);
-      });
+    this.service.findAll(this.page, this.pageSize).subscribe({
+      next: (data) => {
+        this.albuns = data;
+        this.carregando = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.mensagemErro = 'Erro ao carregar álbuns.';
+        this.carregando = false;
+      }
     });
 
-  this.service.count()
-    .subscribe(c => this.total = c);
+    this.service.count().subscribe({
+      next: (c) => this.total = c,
+      error: () => this.total = 0
+    });
+  }
+
+  pesquisar(): void {
+    const termo = this.filtro.trim();
+
+    if (!termo) {
+      this.page = 0;
+      this.loadData();
+      return;
+    }
+
+    this.carregando = true;
+    this.mensagemErro = '';
+
+    this.service.findByTitulo(termo, this.page, this.pageSize).subscribe({
+      next: (data) => {
+        this.albuns = data;
+        this.total = data.length;
+        this.carregando = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.mensagemErro = 'Erro ao pesquisar álbum.';
+        this.carregando = false;
+      }
+    });
+  }
+
+  excluir(id: number): void {
+    if (!confirm('Deseja excluir este álbum?')) return;
+
+    this.service.delete(id).subscribe({
+      next: () => this.loadData(),
+      error: (err) => {
+  console.error(err);
+  alert('Não é possível excluir este álbum porque ele possui produtos, faixas ou pedidos relacionados.');
 }
-
-  /*load de todas as faixas do album (tirar dúvida com professor depois)*/ 
-  loadFaixas(albumId: number) {
-  this.faixaService.findByAlbum(albumId)
-    .subscribe(f => this.faixasPorAlbum[albumId] = f);
-}
-
-  pesquisar() {
-    if (!this.filtro) return this.loadData();
-
-    this.service.findByTitulo(this.filtro)
-      .subscribe(data => this.albuns = data);
+    });
   }
 
-  excluir(id: number) {
-    this.service.delete(id).subscribe(() => this.loadData());
+  novo(): void {
+    this.router.navigate(['/albums/new']);
   }
 
-  getNomeProducao(id: number): string {
-    return this.producoes.find(p => p.id === id)?.produtor || '';
+  getFormato(formato: any): string {
+    if (!formato) return '';
+
+    if (typeof formato === 'string') return formato;
+
+    if (typeof formato === 'object') {
+      return formato.label || formato.nome || formato.name || Object.values(formato).join(' ');
+    }
+
+    return String(formato);
   }
 
-  getProjetos(ids: number[]): string {
-    return ids?.map(id => `Projeto ${id}`).join(', ') || '';
+  getProjetos(album: Album): string {
+    return album.artistasPrincipais
+      ?.map(p => p.nomeArtistico || p.nomeGrupo)
+      .join(', ') || 'Sem projetos';
   }
 
-  /*pegar genero das faixas*/
-  getGenerosDoAlbum(albumId: number): string {
+  getGeneros(album: Album): string {
+    return album.generos
+      ?.map(g => g.nomeGenero)
+      .join(', ') || 'Sem gêneros';
+  }
 
-  const faixas = this.faixasPorAlbum[albumId] || [];
+  proxima(): void {
+    if ((this.page + 1) * this.pageSize >= this.total) return;
+    this.page++;
+    this.loadData();
+  }
 
-  const nomes = faixas.map(f => f.nomeGenero);
+  anterior(): void {
+    if (this.page > 0) {
+      this.page--;
+      this.loadData();
+    }
+  }
 
-  return [...new Set(nomes)].join(', ');
-}
-
+  totalPaginas(): number {
+    return Math.ceil(this.total / this.pageSize);
+  }
 }

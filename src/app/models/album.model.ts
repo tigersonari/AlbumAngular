@@ -1,14 +1,25 @@
-export class Album {
-  id!: number;
-  titulo!: string;
-  descricao!: string;
-  lancamento!: string;
+export interface Album {
+  id: number;
+  titulo: string;
+  descricao: string;
+  lancamento: string;
+  capaUrl?: string;
 
-  formato!: number; // ENUM
+  formato: any;
 
-  idProducao!: number;
+  producao?: {
+    id: number;
+    produtor: string;
+  };
 
-  idsProjetos: number[] = []; // N:N
+  artistasPrincipais?: {
+    id: number;
+    nomeArtistico?: string;
+    nomeGrupo?: string;
+  }[];
 
-  //ver como vai ficar faixas e generos (falar com professor para tirar dúvida)
+  generos?: {
+    id: number;
+    nomeGenero: string;
+  }[];
 }

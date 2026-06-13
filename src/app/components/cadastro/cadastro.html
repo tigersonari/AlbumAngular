@@ -1,0 +1,26 @@
+<div class="container login-container">
+
+  <h2>Cadastro</h2>
+
+  <p *ngIf="mensagemErro">{{ mensagemErro }}</p>
+
+  <form>
+
+    <input name="nome" [(ngModel)]="nome" placeholder="Nome">
+    <input name="login" [(ngModel)]="login" placeholder="Login">
+    <input name="email" [(ngModel)]="email" placeholder="E-mail">
+    <input name="telefone" [(ngModel)]="telefone" placeholder="Telefone com 11 dígitos">
+    <input name="senha" [(ngModel)]="senha" type="password" placeholder="Senha">
+
+    <button type="button" (click)="cadastrar()" [disabled]="carregando">
+      {{ carregando ? 'Cadastrando...' : 'Cadastrar' }}
+    </button>
+
+  </form>
+
+  <p>
+    Já tem conta?
+    <a routerLink="/login">Entrar</a>
+  </p>
+
+</div>

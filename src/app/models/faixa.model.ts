@@ -5,9 +5,22 @@ export class Faixa {
   duracao!: number;
   idioma!: string;
 
-  tipoVersao!: number; // ENUM
+  tipoVersao!: string;
 
-  idGenero!: number;
-  idComposicao!: number;
-  idAlbum!: number;
+  album?: {
+    id: number;
+    titulo: string;
+  };
+
+  genero?: {
+    id: number;
+    nomeGenero: string;
+  };
+
+  composicao?: {
+    id: number;
+    data: string;
+  };
+
+  participacoes?: any[];
 }

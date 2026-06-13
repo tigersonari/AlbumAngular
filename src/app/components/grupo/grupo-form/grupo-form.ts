@@ -72,62 +72,95 @@ export class GrupoFormComponent implements OnInit {
   }
 
   cancelar(): void {
+    if (this.route.snapshot.queryParams['voltarParaAlbum']) {
+      this.router.navigate(['/albums/new']);
+      return;
+    }
+
+    this.router.navigate(['/grupos']);
+  }
+
+  voltarDepoisDeSalvar(): void {
+    if (this.route.snapshot.queryParams['voltarParaAlbum']) {
+      this.router.navigate(['/albums/new']);
+      return;
+    }
+
     this.router.navigate(['/grupos']);
   }
 
   salvar(): void {
+    this.mensagemErro = '';
 
-  if (this.form.invalid) {
-    this.form.markAllAsTouched();
-    return;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const value = this.form.value;
+
+    const payload = {
+      id: value.id,
+      nomeGrupo: value.nomeGrupo,
+      dataInicio: value.dataInicio,
+      dataTermino: value.dataTermino || null,
+      idEmpresa: Number(value.idEmpresa),
+      idsArtistas: (value.idsArtistas || []).map((id: any) => Number(id))
+    };
+
+    if (payload.idsArtistas.length === 0) {
+      this.mensagemErro = 'Selecione pelo menos um integrante.';
+      return;
+    }
+
+    this.salvando = true;
+
+    if (value.id) {
+      this.service.update(payload).subscribe({
+        next: () => {
+          alert('Atualizado com sucesso!');
+          this.voltarDepoisDeSalvar();
+        },
+        error: (err: any) => {
+          console.error(err);
+          this.mensagemErro = 'Erro ao atualizar grupo.';
+          this.salvando = false;
+        }
+      });
+    } else {
+      this.service.create(payload).subscribe({
+        next: () => {
+          alert('Criado com sucesso!');
+          this.voltarDepoisDeSalvar();
+        },
+        error: (err: any) => {
+          console.error(err);
+          this.mensagemErro = 'Erro ao criar grupo.';
+          this.salvando = false;
+        }
+      });
+    }
   }
 
-  const value = this.form.value;
-
-  const payload = {
-    id: value.id,
-    nomeGrupo: value.nomeGrupo,
-    dataInicio: value.dataInicio,
-    dataTermino: value.dataTermino || null,
-    idEmpresa: Number(value.idEmpresa),
-    idsArtistas: (value.idsArtistas || []).map((id: any) => Number(id))
-  };
-
-  if (payload.idsArtistas.length === 0) {
-    this.mensagemErro = 'Selecione pelo menos um integrante.';
-    return;
+  get idsArtistasSelecionados(): number[] {
+    return this.form.get('idsArtistas')?.value || [];
   }
 
-  if (value.id) {
-    this.service.update(payload).subscribe({
-      next: () => this.router.navigate(['/grupos'])
-    });
-  } else {
-    this.service.create(payload).subscribe({
-      next: () => this.router.navigate(['/grupos'])
-    });
-  }
-}
-
-get idsArtistasSelecionados(): number[] {
-  return this.form.get('idsArtistas')?.value || [];
-}
-
-artistaSelecionado(id: number): boolean {
-  return this.idsArtistasSelecionados.includes(id);
-}
-
-toggleArtista(id: number, event: Event): void {
-  const checked = (event.target as HTMLInputElement).checked;
-
-  let ids = [...this.idsArtistasSelecionados];
-
-  if (checked) {
-    ids.push(id);
-  } else {
-    ids = ids.filter(i => i !== id);
+  artistaSelecionado(id: number): boolean {
+    return this.idsArtistasSelecionados.includes(id);
   }
 
-  this.form.get('idsArtistas')?.setValue(ids);
-}
+  toggleArtista(id: number, event: Event): void {
+    const checked = (event.target as HTMLInputElement).checked;
+    let ids = [...this.idsArtistasSelecionados];
+
+    if (checked) {
+      ids.push(id);
+    } else {
+      ids = ids.filter(i => i !== id);
+    }
+
+    this.form.get('idsArtistas')?.setValue(ids);
+    this.form.get('idsArtistas')?.markAsTouched();
+  }
 }

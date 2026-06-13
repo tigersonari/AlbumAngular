@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ArtistaService } from '../../../services/artista.service';
 import { EmpresaService } from '../../../services/empresa.service';
 import { Artista } from '../../../models/artista.model';
@@ -32,7 +32,8 @@ export class ArtistaListComponent implements OnInit {
   constructor(
     private service: ArtistaService,
     private empresaService: EmpresaService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -51,6 +52,7 @@ export class ArtistaListComponent implements OnInit {
       next: (data) => {
         this.artistas = data;
         this.carregando = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.mensagemErro = 'Erro ao carregar artistas.';
@@ -80,6 +82,7 @@ export class ArtistaListComponent implements OnInit {
         this.page = 0;
         this.total = data.length;
         this.carregando = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.mensagemErro = 'Erro ao filtrar por empresa.';
@@ -106,6 +109,7 @@ export class ArtistaListComponent implements OnInit {
         this.page = 0;
         this.total = data.length;
         this.carregando = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.mensagemErro = 'Erro ao pesquisar artista.';

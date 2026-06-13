@@ -1,0 +1,158 @@
+.detalhe-container {
+  max-width: 1180px;
+}
+
+.detalhe-page {
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+}
+
+.topo-produto {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 36px;
+  align-items: center;
+  min-height: 420px;
+}
+
+.capa-bloco {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.capa-bloco img {
+  width: 360px;
+  height: 360px;
+  object-fit: cover;
+  border-radius: 12px;
+  background: #333;
+}
+
+.acoes-icones {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.acoes-icones button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  margin: 0;
+
+  border-radius: 50%;
+  border: 1px solid #914037;
+
+  background: #8e2c22;
+  color: white;
+
+  font-size: 20px;
+  line-height: 1;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.acoes-icones button:hover {
+  background: #b03a2e;
+}
+
+.acoes-icones button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.titulo-bloco {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+  height: 100%;
+}
+
+.titulo-bloco h1 {
+  font-size: 56px;
+  line-height: 1.1;
+  margin: 0 0 18px;
+  max-width: 700px;
+}
+
+.titulo-bloco h2 {
+  font-size: 42px;
+  margin: 0;
+  color: #fff;
+}
+
+.baixo-produto {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 36px;
+  align-items: start;
+}
+
+.info-texto {
+  padding-left: 8px;
+}
+
+.info-texto .descricao {
+  font-size: 20px;
+  margin-bottom: 24px;
+}
+
+.info-texto p {
+  font-size: 19px;
+  line-height: 1.55;
+  margin: 12px 0;
+}
+
+.faixas-card {
+  border: 1px solid #333;
+  border-radius: 14px;
+  padding: 22px;
+  background: #181818;
+  max-height: 520px;
+  overflow-y: auto;
+}
+
+.faixas-card h3 {
+  margin-top: 0;
+  margin-bottom: 22px;
+}
+
+.faixa-item {
+  padding: 14px 0;
+  border-bottom: 1px solid #333;
+}
+
+.faixa-topo {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.faixa-item small {
+  display: block;
+  margin-top: 5px;
+  opacity: 0.8;
+}
+
+@media (max-width: 950px) {
+  .topo-produto,
+  .baixo-produto {
+    grid-template-columns: 1fr;
+  }
+
+  .capa-bloco img {
+    width: 100%;
+    max-width: 360px;
+  }
+}

@@ -66,6 +66,20 @@ export class ProducaoFormComponent implements OnInit {
   }
 
   cancelar(): void {
+    if (this.route.snapshot.queryParams['voltarParaAlbum']) {
+      this.router.navigate(['/albums/new']);
+      return;
+    }
+
+    this.router.navigate(['/producoes']);
+  }
+
+  voltarDepoisDeSalvar(): void {
+    if (this.route.snapshot.queryParams['voltarParaAlbum']) {
+      this.router.navigate(['/albums/new']);
+      return;
+    }
+
     this.router.navigate(['/producoes']);
   }
 
@@ -95,7 +109,7 @@ export class ProducaoFormComponent implements OnInit {
       this.service.update(payload).subscribe({
         next: () => {
           alert('Atualizado com sucesso!');
-          this.router.navigate(['/producoes']);
+          this.voltarDepoisDeSalvar();
         },
         error: (err: any) => {
           console.error(err);
@@ -107,7 +121,7 @@ export class ProducaoFormComponent implements OnInit {
       this.service.create(payload).subscribe({
         next: () => {
           alert('Criado com sucesso!');
-          this.router.navigate(['/producoes']);
+          this.voltarDepoisDeSalvar();
         },
         error: (err: any) => {
           console.error(err);

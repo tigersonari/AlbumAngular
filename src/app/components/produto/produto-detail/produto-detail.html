@@ -1,0 +1,71 @@
+<div class="container detalhe-container">
+
+  <p *ngIf="carregando">Carregando...</p>
+  <p *ngIf="mensagemErro">{{ mensagemErro }}</p>
+
+  <div *ngIf="produto" class="detalhe-page">
+
+    <section class="topo-produto">
+
+      <div class="capa-bloco">
+        <img
+          [src]="getImagem(produto)"
+          alt="Capa do álbum"
+          (error)="usarImagemPadrao($event)">
+
+        <div class="acoes-icones">
+          <button title="Adicionar ao carrinho" (click)="adicionarAoCarrinho()" [disabled]="produto.quantidadeEstoque <= 0">+</button>
+          <button title="Ver carrinho" routerLink="/carrinho">🛒</button>
+          <button title="Lista de desejos" (click)="adicionarAListaDesejos()">♡</button>
+          <button title="Voltar" routerLink="/produtos">&lt;</button>
+        </div>
+      </div>
+
+      <div class="titulo-bloco">
+        <h1>{{ produto.album.titulo }}</h1>
+        <h2>R$ {{ produto.preco.toFixed(2) }}</h2>
+      </div>
+
+    </section>
+
+    <section class="baixo-produto">
+
+      <div class="info-texto">
+        <p class="descricao">{{ produto.album.descricao }}</p>
+
+        <p><strong>Artista/Grupo:</strong> {{ getProjetos(produto.album) }}</p>
+        <p><strong>Gênero:</strong> {{ getGeneros(produto.album) }}</p>
+        <p><strong>Lançamento:</strong> {{ produto.album.lancamento }}</p>
+        <p><strong>Formato:</strong> {{ getFormato(produto.album.formato) }}</p>
+        <p><strong>Produção:</strong> {{ produto.album.producao?.produtor || '-' }}</p>
+        <p><strong>Estoque:</strong> {{ produto.quantidadeEstoque }}</p>
+      </div>
+
+      <div class="faixas-card">
+        <h3>Faixas do álbum</h3>
+
+        <p *ngIf="faixas.length === 0">
+          Nenhuma faixa cadastrada.
+        </p>
+
+        <div class="faixa-item" *ngFor="let f of faixas">
+          <div class="faixa-topo">
+            <strong>{{ f.numeroFaixa }}. {{ f.titulo }}</strong>
+            <span>{{ f.duracao }} min</span>
+          </div>
+
+          <small>{{ f.idioma }} • {{ f.genero?.nomeGenero || '-' }}</small>
+
+          <small *ngIf="f.participacoes && f.participacoes.length > 0">
+            <span *ngFor="let p of f.participacoes">
+              {{ p.papel }}
+            </span>
+          </small>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+</div>

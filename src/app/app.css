@@ -1,0 +1,206 @@
+.top-header {
+  width: 100%;
+  height: 120px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: #080808;
+}
+
+.header-bg {
+  height: 120px;
+  background:
+    linear-gradient(rgba(0,0,0,.35), rgba(0,0,0,.55)),
+    url('/img/header-albummix.png');
+
+  background-size: cover;
+  background-position: center;
+
+  display: flex;
+  align-items: center;
+  padding: 0 32px;
+  gap: 24px;
+}
+
+.menu-btn {
+  font-size: 30px;
+  background: transparent;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
+
+.logo-area {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  z-index: 2;
+}
+
+.logo-area img {
+  display: block;
+  width: 110px;
+  height: 90px;
+  object-fit: contain;
+}
+
+.header-nav {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  gap: 34px;
+}
+
+.header-nav a {
+  color: #e8d7ca;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+.header-nav a:hover {
+  color: #d44736;
+}
+
+.header-icons {
+  display: flex;
+  gap: 14px;
+  z-index: 2;
+}
+
+.header-icons button {
+  background: transparent;
+  color: white;
+  border: none;
+  font-size: 26px;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
+
+/* SIDEBAR */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -310px;
+  width: 290px;
+  height: 100vh;
+
+  background: #111;
+  border-right: 1px solid #333;
+  z-index: 3000;
+
+  padding: 24px;
+
+  display: flex;
+  flex-direction: column;
+
+  transition: .25s;
+}
+
+.sidebar.aberta {
+  left: 0;
+}
+
+.fechar-menu {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+
+  background: transparent;
+  color: white;
+  border: none;
+
+  font-size: 28px;
+  cursor: pointer;
+
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar h2 {
+  margin-top: 30px;
+}
+
+.usuario {
+  margin: 20px 0;
+}
+
+.usuario span {
+  display: block;
+  font-weight: bold;
+}
+
+.usuario small {
+  color: #d44736;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sidebar nav a {
+  color: white;
+  text-decoration: none;
+}
+
+.sidebar nav a:hover {
+  color: #d44736;
+}
+
+.sidebar hr {
+  width: 100%;
+  border: none;
+  border-top: 1px solid #333;
+  margin: 16px 0;
+}
+
+.sair-btn {
+  margin-top: auto;
+  width: 100%;
+  padding: 12px;
+
+  background: #7b241c;
+  color: white;
+
+  border: none;
+  border-radius: 8px;
+
+  cursor: pointer;
+}
+
+/* OVERLAY SÓ FUNCIONA QUANDO SIDEBAR ABRE */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  z-index: 2500;
+}
+
+/* CONTEÚDO */
+.conteudo {
+  min-height: calc(100vh - 180px);
+  padding: 24px;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+}
+
+.conteudo > * {
+  width: 100%;
+}
+
+/* FOOTER */
+.footer {
+  padding: 24px;
+  text-align: center;
+  background: #080808;
+  border-top: 1px solid #222;
+  color: #aaa;
+}

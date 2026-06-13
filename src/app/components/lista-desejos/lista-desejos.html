@@ -1,0 +1,29 @@
+<div class="container">
+
+  <h2>Lista de Desejos</h2>
+
+  <p *ngIf="itens.length === 0">
+    Sua lista de desejos está vazia.
+  </p>
+
+  <div class="grid-produtos" *ngIf="itens.length > 0">
+
+    <div class="card-produto" *ngFor="let item of itens">
+
+      <img [src]="item.imagem" alt="Produto">
+
+      <h3>{{ item.titulo }}</h3>
+
+      <strong>R$ {{ item.preco.toFixed(2) }}</strong>
+
+      <div class="acoes">
+        <button [routerLink]="['/produtos', item.id]">Ver detalhes</button>
+        <button (click)="adicionarAoCarrinho(item)">Adicionar ao carrinho</button>
+        <button (click)="remover(item.id)">Remover</button>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

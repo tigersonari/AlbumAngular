@@ -1,0 +1,34 @@
+<div class="container">
+
+  <h2>Meus Pedidos</h2>
+
+  <p *ngIf="carregando">Carregando...</p>
+  <p *ngIf="mensagemErro">{{ mensagemErro }}</p>
+
+  <p *ngIf="!carregando && pedidos.length === 0">
+    Nenhum pedido encontrado.
+  </p>
+
+  <div class="pedido-card" *ngFor="let p of pedidos">
+
+    <h3>Pedido #{{ p.id }}</h3>
+
+    <p><strong>Data:</strong> {{ p.dataCriacao | date:'dd/MM/yyyy HH:mm' }}</p>
+    <p><strong>Status:</strong> {{ p.status }}</p>
+    <p><strong>Pagamento:</strong> {{ p.pagamento?.metodoPagamento }}</p>
+    <p><strong>Status pagamento:</strong> {{ p.pagamento?.status }}</p>
+    <p><strong>Total:</strong> R$ {{ p.total?.toFixed(2) }}</p>
+
+    <button [routerLink]="['/meus-pedidos', p.id]">
+      Ver detalhes
+    </button>
+
+    <button
+      *ngIf="p.status === 'PAGAMENTO_PENDENTE'"
+      (click)="cancelarPedido(p.id)">
+      Cancelar pedido
+    </button>
+
+  </div>
+
+</div>

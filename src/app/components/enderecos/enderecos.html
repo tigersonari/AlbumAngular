@@ -1,0 +1,32 @@
+<div class="container">
+
+  <h2>Meus Endereços</h2>
+
+  <p *ngIf="mensagemErro">{{ mensagemErro }}</p>
+
+  <div class="form-endereco">
+    <input [(ngModel)]="novoEndereco.rua" placeholder="Rua">
+    <input [(ngModel)]="novoEndereco.numero" placeholder="Número">
+    <input [(ngModel)]="novoEndereco.complemento" placeholder="Complemento">
+    <input [(ngModel)]="novoEndereco.bairro" placeholder="Bairro">
+    <input [(ngModel)]="novoEndereco.cidade" placeholder="Cidade">
+    <input [(ngModel)]="novoEndereco.uf" placeholder="UF">
+    <input [(ngModel)]="novoEndereco.cep" placeholder="CEP">
+
+    <button (click)="salvar()">Adicionar endereço</button>
+  </div>
+
+  <div class="lista">
+    <div class="card" *ngFor="let e of enderecos">
+      <p>
+        <strong>{{ e.rua }}, {{ e.numero }}</strong><br>
+        {{ e.complemento }}<br>
+        {{ e.bairro }} - {{ e.cidade }}/{{ e.uf }}<br>
+        CEP: {{ e.cep }}
+      </p>
+
+      <button (click)="excluir(e.id)">Excluir</button>
+    </div>
+  </div>
+
+</div>

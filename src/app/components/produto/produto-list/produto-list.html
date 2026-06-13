@@ -1,0 +1,187 @@
+<div class="home-produtos">
+
+  <section class="hero">
+    <div class="busca">
+      <input
+        [(ngModel)]="filtro"
+        (input)="pesquisar()"
+        placeholder="Buscar álbum, faixa, artista, gênero ou participação">
+      <button type="button" (click)="pesquisar()">Buscar</button>
+    </div>
+  </section>
+
+  <p *ngIf="carregando">Carregando...</p>
+  <p *ngIf="mensagemErro">{{ mensagemErro }}</p>
+
+  <ng-container *ngIf="modo === 'home'">
+
+    <section>
+      <div class="secao-topo">
+        <h2>Populares</h2>
+        <button type="button" (click)="abrirTodos()">Mais</button>
+      </div>
+
+      <div class="grid-produtos">
+        <div class="card-produto" *ngFor="let p of destaques">
+          <img [src]="getImagem(p)" (error)="usarImagemPadrao($event)">
+          <h3>{{ p.album.titulo }}</h3>
+          <p>{{ getProjetos(p.album) }}</p>
+          <strong>R$ {{ p.preco.toFixed(2) }}</strong>
+          <button type="button" [routerLink]="['/produtos', p.id]">Ver detalhes</button>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="secao-topo">
+        <h2>Todos os álbuns</h2>
+        <button type="button" (click)="abrirTodos()">Mais</button>
+      </div>
+
+      <div class="grid-produtos">
+        <div class="card-produto" *ngFor="let p of todosPreview">
+          <img [src]="getImagem(p)" (error)="usarImagemPadrao($event)">
+          <h3>{{ p.album.titulo }}</h3>
+          <p>{{ getProjetos(p.album) }}</p>
+          <strong>R$ {{ p.preco.toFixed(2) }}</strong>
+          <button type="button" [routerLink]="['/produtos', p.id]">Ver detalhes</button>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="secao-topo">
+        <h2>Gêneros</h2>
+        <button type="button" (click)="abrirTodosGeneros()">Mais</button>
+      </div>
+
+   <div class="grid-categorias">
+  <div class="card-categoria" *ngFor="let g of generos.slice(0, 6)">
+
+    <button
+      type="button"
+      class="card-click-area"
+      (click)="filtrarGenero(g.nome)">
+    </button>
+
+    <img [src]="g.imagem" (error)="usarCategoriaPadrao($event)">
+
+    <div class="categoria-overlay">
+      <h3>{{ g.nome }}</h3>
+      <p>{{ g.total }} álbum(ns)</p>
+    </div>
+
+  </div>
+</div>
+    </section>
+
+    <section>
+      <div class="secao-topo">
+        <h2>Décadas</h2>
+        <button type="button" (click)="abrirTodasDecadas()">Mais</button>
+      </div>
+
+      <div class="grid-categorias">
+  <div class="card-categoria" *ngFor="let d of decadas">
+
+    <button
+      type="button"
+      class="card-click-area"
+      (click)="filtrarDecada(d.nome)">
+    </button>
+
+    <img [src]="d.imagem" (error)="usarCategoriaPadrao($event)">
+
+    <div class="categoria-overlay">
+      <h3>{{ d.nome }}</h3>
+      <p>{{ d.total }} álbum(ns)</p>
+    </div>
+
+  </div>
+</div>
+    </section>
+
+    <section>
+      <div class="secao-topo">
+        <h2>Artistas e Grupos</h2>
+        <button type="button" (click)="abrirTodosArtistas()">Mais</button>
+      </div>
+
+      <div class="grid-categorias">
+  <div class="card-categoria" *ngFor="let a of artistas.slice(0, 8)">
+
+    <button
+      type="button"
+      class="card-click-area"
+      (click)="filtrarArtista(a.nome)">
+    </button>
+
+    <img [src]="a.imagem" (error)="usarCategoriaPadrao($event)">
+
+    <div class="categoria-overlay">
+      <h3>{{ a.nome }}</h3>
+      <p>{{ a.total }} álbum(ns)</p>
+    </div>
+
+  </div>
+</div>
+    </section>
+
+  </ng-container>
+
+  <ng-container *ngIf="modo === 'lista'">
+
+    <div class="secao-topo">
+      <h2>{{ tituloLista }}</h2>
+      <button type="button" (click)="voltarHome()">Voltar para home</button>
+    </div>
+
+    <div class="grid-produtos">
+      <div class="card-produto" *ngFor="let p of produtosFiltrados">
+
+        <img [src]="getImagem(p)" (error)="usarImagemPadrao($event)">
+
+        <h3>{{ p.album.titulo }}</h3>
+        <p>{{ getProjetos(p.album) }}</p>
+        <p>{{ getGeneros(p.album) }}</p>
+        <p>{{ p.album.lancamento }}</p>
+
+        <strong>R$ {{ p.preco.toFixed(2) }}</strong>
+
+        <div class="acoes">
+          <button type="button" [routerLink]="['/produtos', p.id]">Ver detalhes</button>
+          <button
+            type="button"
+            (click)="adicionarAoCarrinho(p)"
+            [disabled]="p.quantidadeEstoque <= 0">
+            Adicionar ao carrinho
+          </button>
+          <button type="button" (click)="adicionarAListaDesejos(p)">♡ Lista de desejos</button>
+        </div>
+
+      </div>
+    </div>
+
+  </ng-container>
+
+  <ng-container *ngIf="modo === 'categorias'">
+
+    <div class="grid-categorias">
+  <a
+    href="#"
+    class="card-categoria"
+    *ngFor="let item of listaCategorias"
+    (click)="selecionarCategoria($event, tipoLista || 'generos', item.nome)">
+
+    <img [src]="item.imagem" (error)="usarCategoriaPadrao($event)">
+
+    <div class="categoria-overlay">
+      <h3>{{ item.nome }}</h3>
+      <p>{{ item.total }} álbum(ns)</p>
+    </div>
+  </a>
+</div>
+
+  </ng-container>
+
+</div>

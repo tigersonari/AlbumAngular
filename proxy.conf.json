@@ -1,0 +1,18 @@
+{
+  "/seaweed-master": {
+    "target": "http://localhost:9333",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/seaweed-master": ""
+    }
+  },
+  "/seaweed-volume": {
+    "target": "http://localhost:8888",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/seaweed-volume": ""
+    }
+  }
+}

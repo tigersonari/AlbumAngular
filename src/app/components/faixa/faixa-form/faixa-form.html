@@ -1,47 +1,145 @@
-<h2>Cadastro de Faixa</h2>
+<div class="container">
 
-<form [formGroup]="form">
+  <h2>Cadastro de Faixa</h2>
 
-  <input formControlName="titulo" placeholder="Título">
+  <p *ngIf="mensagemErro">{{ mensagemErro }}</p>
 
-  <input type="number" formControlName="numeroFaixa" placeholder="Número da faixa">
+  <form [formGroup]="form">
 
-  <input type="number" formControlName="duracao" placeholder="Duração">
+    <div>
+      <input formControlName="titulo" placeholder="Título">
+      <small *ngIf="form.get('titulo')?.touched && form.get('titulo')?.hasError('required')">
+        O título é obrigatório.
+      </small>
+    </div>
 
-  <input formControlName="idioma" placeholder="Idioma">
+    <div>
+      <input type="number" formControlName="numeroFaixa" placeholder="Número da faixa">
+      <small *ngIf="form.get('numeroFaixa')?.touched && form.get('numeroFaixa')?.hasError('required')">
+        O número da faixa é obrigatório.
+      </small>
+    </div>
 
-  <label>Tipo de Versão</label>
-<select formControlName="tipoVersao">
-  <option [value]="1">ORIGINAL</option>
-  <option [value]="2">REMIX</option>
-  <option [value]="3">ACUSTICO</option>
-  <option [value]="4">LIVE</option>
-  <option [value]="5">INSTRUMENTAL</option>
-  <option [value]="6">COVER</option>
-  <option [value]="7">REMASTERED</option>
-</select>
+    <div>
+      <input type="number" step="0.01" formControlName="duracao" placeholder="Duração">
+      <small *ngIf="form.get('duracao')?.touched && form.get('duracao')?.hasError('required')">
+        A duração é obrigatória.
+      </small>
+    </div>
 
-  <label>Álbum</label>
-  <select formControlName="idAlbum">
-    <option *ngFor="let a of albuns" [value]="a.id">
-      {{a.titulo}}
-    </option>
-  </select>
+    <div>
+      <input formControlName="idioma" placeholder="Idioma">
+      <small *ngIf="form.get('idioma')?.touched && form.get('idioma')?.hasError('required')">
+        O idioma é obrigatório.
+      </small>
+    </div>
 
-  <label>Gênero</label>
-  <select formControlName="idGenero">
-    <option *ngFor="let g of generos" [value]="g.id">
-      {{g.nomeGenero}}
-    </option>
-  </select>
+    <div>
+      <label>Tipo de Versão</label>
+      <select formControlName="idTipoVersao">
+        <option [ngValue]="null">Selecione o tipo</option>
+        <option *ngFor="let t of tiposVersao" [ngValue]="t.id">
+          {{ t.nome }}
+        </option>
+      </select>
 
-  <label>Composição</label>
-  <select formControlName="idComposicao">
-    <option *ngFor="let c of composicoes" [value]="c.id">
-      Composição {{c.id}}
-    </option>
-  </select>
+      <small *ngIf="form.get('idTipoVersao')?.touched && form.get('idTipoVersao')?.hasError('required')">
+        O tipo da versão é obrigatório.
+      </small>
+    </div>
 
-  <button (click)="salvar()">Salvar</button>
+    <div>
+      <label>Álbum</label>
+      <select formControlName="idAlbum">
+        <option [ngValue]="null">Selecione o álbum</option>
+        <option *ngFor="let a of albuns" [ngValue]="a.id">
+          {{ a.titulo }}
+        </option>
+      </select>
 
-</form>
+      <small *ngIf="form.get('idAlbum')?.touched && form.get('idAlbum')?.hasError('required')">
+        O álbum é obrigatório.
+      </small>
+    </div>
+
+    <div>
+      <label>Gênero</label>
+      <select formControlName="idGenero">
+        <option [ngValue]="null">Selecione o gênero</option>
+        <option *ngFor="let g of generos" [ngValue]="g.id">
+          {{ g.nomeGenero }}
+        </option>
+      </select>
+
+      <small *ngIf="form.get('idGenero')?.touched && form.get('idGenero')?.hasError('required')">
+        O gênero é obrigatório.
+      </small>
+    </div>
+
+    <div>
+      <label>Composição</label>
+      <select formControlName="idComposicao">
+        <option [ngValue]="null">Selecione a composição</option>
+        <option *ngFor="let c of composicoes" [ngValue]="c.id">
+          Composição {{ c.id }} - {{ c.data }}
+        </option>
+      </select>
+
+      <small *ngIf="form.get('idComposicao')?.touched && form.get('idComposicao')?.hasError('required')">
+        A composição é obrigatória.
+      </small>
+    </div>
+
+    <h3>Participação na faixa</h3>
+
+<div>
+  <label>Papel</label>
+  <input
+    [(ngModel)]="participacaoPapel"
+    [ngModelOptions]="{ standalone: true }"
+    placeholder="Ex: Feat, Backing vocal, Participação especial">
+</div>
+
+<div>
+  <label>
+    <input
+      type="checkbox"
+      [(ngModel)]="participacaoDestaque"
+      [ngModelOptions]="{ standalone: true }">
+    Participação de destaque
+  </label>
+</div>
+
+<h4>Artistas participantes</h4>
+
+<div *ngFor="let a of artistas">
+  <label>
+    <input
+      type="checkbox"
+      [checked]="participanteSelecionado(a.id)"
+      (change)="toggleParticipante(a.id, $event)">
+    {{ a.nomeArtistico }}
+  </label>
+</div>
+
+<h4>Grupos participantes</h4>
+
+<div *ngFor="let g of grupos">
+  <label>
+    <input
+      type="checkbox"
+      [checked]="participanteSelecionado(g.id)"
+      (change)="toggleParticipante(g.id, $event)">
+    {{ g.nomeGrupo }}
+  </label>
+</div>
+
+    <button type="button" (click)="cancelar()">Cancelar</button>
+
+    <button type="button" (click)="salvar()" [disabled]="salvando">
+      {{ salvando ? 'Salvando...' : 'Salvar' }}
+    </button>
+
+  </form>
+
+</div>

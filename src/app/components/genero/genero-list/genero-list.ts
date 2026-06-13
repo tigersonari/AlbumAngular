@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { GeneroService } from '../../../services/genero.service';
 import { Genero } from '../../../models/genero.model';
 import { Router } from '@angular/router';
@@ -26,7 +26,8 @@ export class GeneroListComponent implements OnInit {
 
   constructor(
     private service: GeneroService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -41,6 +42,7 @@ export class GeneroListComponent implements OnInit {
       next: (data) => {
         this.generos = data;
         this.carregando = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.mensagemErro = 'Erro ao carregar os gêneros.';
@@ -72,6 +74,7 @@ export class GeneroListComponent implements OnInit {
         this.page = 0;
         this.total = data.length;
         this.carregando = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.mensagemErro = 'Erro ao pesquisar gênero.';
@@ -86,7 +89,9 @@ export class GeneroListComponent implements OnInit {
     }
 
     this.service.delete(id).subscribe({
-      next: () => this.loadData(),
+      next: () => {
+        this.loadData();
+      },
       error: () => this.mensagemErro = 'Erro ao excluir gênero.'
     });
   }

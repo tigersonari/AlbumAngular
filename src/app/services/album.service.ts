@@ -12,10 +12,10 @@ export class AlbumService {
 
   constructor(private http: HttpClient) {}
 
-  findAll(page: number, pageSize: number): Observable<Album[]> {
+  findAll(page = 0, pageSize = 10): Observable<Album[]> {
     const params = new HttpParams()
-      .set('page', page)
-      .set('pageSize', pageSize);
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString());
 
     return this.http.get<Album[]>(this.baseUrl, { params });
   }
@@ -24,23 +24,30 @@ export class AlbumService {
     return this.http.get<number>(`${this.baseUrl}/count`);
   }
 
-  findByTitulo(titulo: string) {
-    return this.http.get<Album[]>(`${this.baseUrl}/find/titulo/${titulo}`);
+  findByTitulo(titulo: string, page = 0, pageSize = 10): Observable<Album[]> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString());
+
+    return this.http.get<Album[]>(
+      `${this.baseUrl}/find/titulo/${encodeURIComponent(titulo)}`,
+      { params }
+    );
   }
 
   findById(id: number): Observable<Album> {
     return this.http.get<Album>(`${this.baseUrl}/${id}`);
   }
 
-  create(album: Album) {
-    return this.http.post(this.baseUrl, album);
+  create(album: any): Observable<Album> {
+    return this.http.post<Album>(this.baseUrl, album);
   }
 
-  update(album: Album) {
-    return this.http.put(`${this.baseUrl}/${album.id}`, album);
+  update(album: any): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/${album.id}`, album);
   }
 
-  delete(id: number) {
-    return this.http.delete(`${this.baseUrl}/${id}`);
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }

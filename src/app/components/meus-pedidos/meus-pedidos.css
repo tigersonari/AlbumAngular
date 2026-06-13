@@ -1,0 +1,10 @@
+.pedido-card {
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+button {
+  margin-right: 8px;
+}

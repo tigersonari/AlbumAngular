@@ -1,26 +1,61 @@
-<h2>Faixas</h2>
+<div class="container">
 
-<table>
-  <tr>
-    <th>ID</th>
-    <th>Título</th>
-    <th>Álbum</th>
-    <th>Gênero</th>
-    <th>Versão</th>
-    <th>Ações</th>
-  </tr>
+  <h2>Faixas</h2>
 
-  <tr *ngFor="let f of faixas">
-    <td>{{f.id}}</td>
-    <td>{{f.titulo}}</td>
-    <td>{{ getNomeAlbum(f.idAlbum) }}</td>
-    <td>{{ getNomeGenero(f.idGenero) }}</td>
-    <td>{{ getTipoVersao(f.tipoVersao) }}</td>
-    <td>
-      <button [routerLink]="['/faixas/edit', f.id]">Editar</button>
-      <button (click)="excluir(f.id)">Excluir</button>
-    </td>
-  </tr>
-</table>
+  <div>
+    <input [(ngModel)]="filtro" placeholder="Buscar por título">
+    <button (click)="pesquisar()">Buscar</button>
+    <button (click)="novo()">Nova Faixa</button>
+  </div>
 
-<button [routerLink]="['/faixas/new']">Nova Faixa</button>
+  <p *ngIf="carregando">Carregando...</p>
+  <p *ngIf="mensagemErro">{{ mensagemErro }}</p>
+
+  <table *ngIf="!carregando">
+    <tr>
+      <th>ID</th>
+      <th>Título</th>
+      <th>Nº</th>
+      <th>Duração</th>
+      <th>Idioma</th>
+      <th>Álbum</th>
+      <th>Gênero</th>
+      <th>Versão</th>
+      <th>Ações</th>
+    </tr>
+
+    <tr *ngFor="let f of faixas">
+      <td>{{ f.id }}</td>
+      <td>{{ f.titulo }}</td>
+      <td>{{ f.numeroFaixa }}</td>
+      <td>{{ f.duracao }}</td>
+      <td>{{ f.idioma }}</td>
+      <td>{{ f.album?.titulo }}</td>
+      <td>{{ f.genero?.nomeGenero }}</td>
+      <td>{{ getTipoVersao(f.tipoVersao) }}</td>
+      <td>
+        <button [routerLink]="['/faixas/edit', f.id]">Editar</button>
+        <button (click)="excluir(f.id)">Excluir</button>
+      </td>
+    </tr>
+  </table>
+
+  <p *ngIf="!carregando && faixas.length === 0">
+    Nenhuma faixa encontrada.
+  </p>
+
+  <div>
+    <button (click)="anterior()" [disabled]="page === 0">Anterior</button>
+
+    <span>
+      Página {{ page + 1 }} de {{ totalPaginas() || 1 }}
+    </span>
+
+    <button
+      (click)="proxima()"
+      [disabled]="(page + 1) * pageSize >= total">
+      Próxima
+    </button>
+  </div>
+
+</div>

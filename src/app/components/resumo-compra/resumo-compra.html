@@ -1,0 +1,91 @@
+<div class="container">
+
+  <h2>Resumo da Compra</h2>
+
+  <div *ngIf="!pedido">
+    <p>Nenhuma compra recente encontrada.</p>
+    <button routerLink="/meus-pedidos">Ver meus pedidos</button>
+    <button routerLink="/produtos">Voltar para produtos</button>
+  </div>
+
+  <div *ngIf="pedido">
+
+    <h3>Pedido #{{ pedido.id }}</h3>
+
+    <p><strong>Data:</strong> {{ pedido.dataCriacao | date:'dd/MM/yyyy HH:mm' }}</p>
+    <p><strong>Status do pedido:</strong> {{ pedido.status }}</p>
+
+    <h3>Endereço de entrega</h3>
+
+    <p *ngIf="pedido.endereco">
+      {{ pedido.endereco.rua }}, {{ pedido.endereco.numero }}
+      <span *ngIf="pedido.endereco.complemento">
+        - {{ pedido.endereco.complemento }}
+      </span>
+      <br>
+      {{ pedido.endereco.bairro }} -
+      {{ pedido.endereco.cidade }}/{{ pedido.endereco.uf }}
+      <br>
+      CEP: {{ pedido.endereco.cep }}
+    </p>
+
+    <h3>Pagamento</h3>
+
+    <p><strong>Método:</strong> {{ pedido.pagamento?.metodoPagamento }}</p>
+    <p><strong>Status:</strong> {{ pedido.pagamento?.status }}</p>
+    <p><strong>Valor:</strong> R$ {{ pedido.pagamento?.valor?.toFixed(2) }}</p>
+
+    <div *ngIf="isPixSemCodigo()">
+      <p>O código PIX ainda não foi gerado.</p>
+
+      <button type="button" (click)="gerarPix()">
+        Gerar PIX
+      </button>
+    </div>
+
+    <div *ngIf="pedido.pagamento?.metodoPagamento === 'PIX' && pedido.pagamento?.codigoPagamento">
+      <p><strong>PIX copia e cola:</strong></p>
+      <textarea readonly rows="5">{{ pedido.pagamento.codigoPagamento }}</textarea>
+    </div>
+
+    <div *ngIf="pedido.pagamento?.metodoPagamento === 'BOLETO' && pedido.pagamento?.codigoPagamento">
+      <p><strong>Linha digitável do boleto:</strong></p>
+      <textarea readonly rows="5">{{ pedido.pagamento.codigoPagamento }}</textarea>
+    </div>
+
+    <div *ngIf="pedido.pagamento?.metodoPagamento === 'CARTAO'">
+      <p><strong>Bandeira:</strong> {{ pedido.pagamento?.bandeira || '-' }}</p>
+      <p><strong>Final do cartão:</strong> {{ pedido.pagamento?.ultimos4 || '-' }}</p>
+    </div>
+
+    <h3>Itens</h3>
+
+    <table>
+      <tr>
+        <th>Produto</th>
+        <th>Quantidade</th>
+        <th>Preço unitário</th>
+        <th>Subtotal</th>
+      </tr>
+
+      <tr *ngFor="let item of pedido.itens">
+        <td>{{ item.nomeProduto }}</td>
+        <td>{{ item.quantidade }}</td>
+        <td>R$ {{ item.precoUnitario?.toFixed(2) }}</td>
+        <td>R$ {{ item.subtotal?.toFixed(2) }}</td>
+      </tr>
+    </table>
+
+    <div *ngIf="pedido.valorDesconto && pedido.valorDesconto > 0">
+      <p><strong>Cupom:</strong> {{ pedido.codigoCupom }}</p>
+      <p><strong>Desconto:</strong> R$ {{ pedido.valorDesconto?.toFixed(2) }}</p>
+    </div>
+
+    <h3>Total: R$ {{ pedido.total?.toFixed(2) }}</h3>
+
+    <button routerLink="/meus-pedidos">Ver meus pedidos</button>
+    <button routerLink="/produtos">Continuar comprando</button>
+
+  </div>
+
+</div>

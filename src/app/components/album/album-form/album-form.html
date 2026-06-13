@@ -1,38 +1,124 @@
 <div class="container">
 
-<h2>Cadastro de Álbum</h2>
+  <h2>Cadastro de Álbum</h2>
 
-<form [formGroup]="form">
+  <p *ngIf="mensagemErro">{{ mensagemErro }}</p>
 
-  <input formControlName="titulo" placeholder="Título">
-  <input formControlName="descricao" placeholder="Descrição">
-  <input type="date" formControlName="lancamento">
+  <form [formGroup]="form">
 
-  <label>Formato</label>
-  <select formControlName="formato">
-    <option [value]="1">SINGLE</option>
-    <option [value]="2">MIXTAPE</option>
-    <option [value]="3">DELUXE</option>
-    <option [value]="4">EP</option>
-    <option [value]="5">LONGPLAY</option>
-  </select>
+    <div>
+      <input formControlName="titulo" placeholder="Título">
+    </div>
 
-  <label>Produção</label>
-  <select formControlName="idProducao">
-    <option *ngFor="let p of producoes" [value]="p.id">
-      {{p.produtor}}
-    </option>
-  </select>
+    <div>
+      <input formControlName="descricao" placeholder="Descrição">
+    </div>
 
-  <label>Projetos</label>
-  <select multiple formControlName="idsProjetos">
-    <option *ngFor="let p of projetos" [value]="p.id">
-      Projeto {{p.id}}
-    </option>
-  </select>
+    <div>
+      <label>Lançamento</label>
+      <input type="date" formControlName="lancamento">
+    </div>
 
-  <button (click)="salvar()">Salvar</button>
+    <h3>Imagem do produto</h3>
 
-</form>
+    <input
+      type="file"
+      accept="image/*"
+      (change)="uploadCapa($event)">
+
+    <div *ngIf="capaUrl">
+      <p>Capa enviada:</p>
+      <img [src]="capaUrl" width="160">
+    </div>
+
+    <div>
+      <label>Formato</label>
+      <select formControlName="idFormato">
+        <option [ngValue]="null">Selecione o formato</option>
+        <option *ngFor="let f of formatos" [ngValue]="f.id">
+          {{ f.nome }}
+        </option>
+      </select>
+    </div>
+
+    <div>
+      <label>Produção</label>
+      <select formControlName="idProducao">
+        <option [ngValue]="null">Selecione a produção</option>
+        <option *ngFor="let p of producoes" [ngValue]="p.id">
+          {{ p.produtor }}
+        </option>
+      </select>
+    </div>
+
+    <button type="button" (click)="novaProducao()">Nova produção</button>
+
+    <div>
+      <label>Projetos Musicais</label>
+
+      <h4>Artistas</h4>
+      <div *ngFor="let a of artistas">
+        <label>
+          <input
+            type="checkbox"
+            [checked]="projetoSelecionado(a.id)"
+            (change)="toggleProjeto(a.id, $event)">
+          {{ a.nomeArtistico }}
+        </label>
+      </div>
+
+      <h4>Grupos</h4>
+      <div *ngFor="let g of grupos">
+        <label>
+          <input
+            type="checkbox"
+            [checked]="projetoSelecionado(g.id)"
+            (change)="toggleProjeto(g.id, $event)">
+          {{ g.nomeGrupo }}
+        </label>
+      </div>
+    </div>
+
+    <button type="button" (click)="novoArtista()">Novo artista</button>
+    <button type="button" (click)="novoGrupo()">Novo grupo</button>
+
+    <div>
+      <label>Gêneros</label>
+
+      <div *ngFor="let g of generos">
+        <label>
+          <input
+            type="checkbox"
+            [checked]="generoSelecionado(g.id)"
+            (change)="toggleGenero(g.id, $event)">
+          {{ g.nomeGenero }}
+        </label>
+      </div>
+    </div>
+
+    <button type="button" (click)="novoGenero()">Novo gênero</button>
+
+    <h3>Venda</h3>
+
+    <label>Preço</label>
+    <input
+      type="number"
+      step="0.01"
+      formControlName="preco"
+      placeholder="Preço">
+
+    <label>Quantidade em estoque</label>
+    <input
+      type="number"
+      formControlName="quantidadeEstoque"
+      placeholder="Estoque">
+
+    <button type="button" (click)="cancelar()">Cancelar</button>
+
+    <button type="button" (click)="salvar()" [disabled]="salvando">
+      {{ salvando ? 'Salvando...' : 'Salvar' }}
+    </button>
+
+  </form>
 
 </div>

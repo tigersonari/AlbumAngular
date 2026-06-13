@@ -1,0 +1,42 @@
+.perfil-grid {
+  display: grid;
+  gap: 24px;
+}
+
+.card-principal,
+.card-acao {
+  background: #141414;
+  border: 1px solid #2d2d2d;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.card-principal h3,
+.card-acao h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 14px 0;
+
+  border-bottom: 1px solid #2f2f2f;
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-item span {
+  color: #cfcfcf;
+}
+
+.form-senha {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}

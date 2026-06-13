@@ -1,0 +1,25 @@
+<div class="container">
+
+  <h2>Redefinir senha</h2>
+
+  <p *ngIf="mensagemErro">{{ mensagemErro }}</p>
+  <p *ngIf="mensagemSucesso">{{ mensagemSucesso }}</p>
+
+  <label>Token</label>
+  <input [(ngModel)]="token" placeholder="Token de recuperação">
+
+  <label>Nova senha</label>
+  <input type="password" [(ngModel)]="novaSenha" placeholder="Nova senha">
+
+  <label>Confirmar nova senha</label>
+  <input type="password" [(ngModel)]="confirmarSenha" placeholder="Confirmar nova senha">
+
+  <button type="button" (click)="redefinir()">
+    Redefinir senha
+  </button>
+
+  <button routerLink="/login">
+    Voltar ao login
+  </button>
+
+</div>

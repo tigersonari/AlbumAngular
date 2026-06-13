@@ -1,0 +1,169 @@
+.dashboard {
+  width: min(1280px, calc(100% - 48px));
+  margin: 32px auto;
+}
+
+.dashboard h2 {
+  text-align: center;
+  font-size: 36px;
+  margin-bottom: 32px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(320px, 1fr));
+  gap: 28px;
+}
+
+.dashboard-card {
+  background: #141414;
+  border: 1px solid #2f2f2f;
+  border-radius: 20px;
+  padding: 28px;
+  min-height: 280px;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.card-header span {
+  font-size: 38px;
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 26px;
+}
+
+.indicadores {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.indicadores button {
+  min-height: 88px;
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid #3d3d3d;
+  background: #1f1f1f;
+  color: #ffffff;
+  cursor: pointer;
+  text-align: left;
+}
+
+.indicadores button:hover {
+  border-color: #8e2c22;
+  transform: translateY(-2px);
+}
+
+.indicadores strong {
+  display: block;
+  font-size: 24px;
+  margin-bottom: 6px;
+}
+
+.indicadores small {
+  color: #bbb;
+}
+
+.catalogo {
+  border-color: #7b241c;
+}
+
+.vendas {
+  border-color: #9b51e0;
+}
+
+.estoque {
+  border-color: #27ae60;
+}
+
+.usuarios {
+  border-color: #2f80ed;
+}
+
+.painel-lista {
+  margin-top: 32px;
+  padding: 26px;
+  background: #141414;
+  border: 1px solid #333;
+  border-radius: 18px;
+}
+
+.painel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.painel-header h3 {
+  margin: 0;
+}
+
+.painel-header button {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #7b241c;
+  color: rgb(96, 25, 182);
+  border: none;
+}
+
+.painel-lista table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 22px;
+}
+
+.painel-lista th,
+.painel-lista td {
+  border: 1px solid #444;
+  padding: 12px;
+  text-align: left;
+}
+
+.painel-lista th {
+  background: #242424;
+}
+
+.painel-lista td {
+  background: #1b1b1b;
+}
+
+@media (max-width: 900px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .indicadores {
+    grid-template-columns: 1fr;
+  }
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.72);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 5000;
+}
+
+.modal-overlay .painel-lista {
+  width: min(1000px, 92vw);
+  max-height: 85vh;
+  overflow: auto;
+
+  margin: 0;
+  background: rgba(122, 4, 4, 0.72);
+  border: 1px solid #333;
+  border-radius: 18px;
+}

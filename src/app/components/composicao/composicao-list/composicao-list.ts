@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ComposicaoService } from '../../../services/composicao.service';
 import { ArtistaService } from '../../../services/artista.service';
 import { GrupoService } from '../../../services/grupo.service';
@@ -38,6 +38,7 @@ export class ComposicaoListComponent implements OnInit {
     private artistaService: ArtistaService,
     private grupoService: GrupoService,
     private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -58,6 +59,7 @@ export class ComposicaoListComponent implements OnInit {
     next: (data) => {
       this.composicoes = data;
       this.carregando = false;
+      this.cdr.detectChanges();
     },
     error: () => {
       this.mensagemErro = 'Erro ao carregar composições.';
@@ -85,6 +87,7 @@ pesquisar(): void {
     next: (data) => {
       this.composicoes = data;
       this.carregando = false;
+      this.cdr.detectChanges();
     },
     error: () => {
       this.mensagemErro = 'Erro ao pesquisar composição.';

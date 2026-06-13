@@ -1,0 +1,81 @@
+<div class="container">
+
+ <h2>Minha Conta</h2>
+
+<div class="perfil-grid">
+
+  <div class="card-principal">
+    <h3>Informações da conta</h3>
+
+    <div class="info-item">
+      <strong>Nome</strong>
+      <span>{{ nomeCard || 'Não informado' }}</span>
+    </div>
+
+    <div class="info-item">
+      <strong>E-mail</strong>
+      <span>{{ emailCard || 'Não informado' }}</span>
+    </div>
+
+    <div class="info-item">
+      <strong>Telefone</strong>
+      <span>{{ telefoneCard || 'Não informado' }}</span>
+    </div>
+  </div>
+
+  <div class="card-acao">
+    <h3>Editar perfil</h3>
+
+    <div class="form-senha">
+
+      <input [(ngModel)]="nome" placeholder="Nome">
+
+      <input [(ngModel)]="login" placeholder="Login">
+
+      <input [(ngModel)]="email" placeholder="E-mail">
+
+      <input [(ngModel)]="telefone" placeholder="Telefone">
+
+      <input
+        type="password"
+        [(ngModel)]="senhaConfirmacao"
+        placeholder="Confirme sua senha">
+
+      <button (click)="atualizarPerfil()">
+        Salvar alterações
+      </button>
+
+    </div>
+  </div>
+
+  <div class="card-acao">
+    <h3>Alterar senha</h3>
+
+    <div class="form-senha">
+
+      <input
+        type="password"
+        [(ngModel)]="senhaAtual"
+        placeholder="Senha atual">
+
+      <input
+        type="password"
+        [(ngModel)]="novaSenha"
+        placeholder="Nova senha">
+
+      <input
+        type="password"
+        [(ngModel)]="confirmarSenha"
+        placeholder="Confirmar nova senha">
+
+      <button (click)="alterarSenha()">
+        Alterar senha
+      </button>
+
+    </div>
+  </div>
+
+</div>
+
+</div>
+

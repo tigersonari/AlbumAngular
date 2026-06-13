@@ -1,0 +1,60 @@
+<div class="container">
+
+  <h2>Carrinho de Compras</h2>
+
+  <p *ngIf="mensagemErro">{{ mensagemErro }}</p>
+
+  <p *ngIf="itens.length === 0">
+    Seu carrinho está vazio.
+  </p>
+
+  <div *ngIf="itens.length > 0">
+
+    <table>
+      <tr>
+        <th>Selecionar</th>
+        <th>Produto</th>
+        <th>Preço</th>
+        <th>Quantidade</th>
+        <th>Subtotal</th>
+        <th>Ações</th>
+      </tr>
+
+      <tr *ngFor="let item of itens">
+        <td>
+          <input
+            type="checkbox"
+            [checked]="itemSelecionado(item.id)"
+            (change)="toggleItem(item.id, $event)">
+        </td>
+
+        <td>
+          <img [src]="item.imagem" alt="Produto">
+          {{ item.titulo }}
+        </td>
+
+        <td>R$ {{ item.preco.toFixed(2) }}</td>
+
+        <td>
+          <button (click)="diminuirQuantidade(item)">-</button>
+          {{ item.quantidade }}
+          <button (click)="aumentarQuantidade(item)">+</button>
+        </td>
+
+        <td>R$ {{ (item.preco * item.quantidade).toFixed(2) }}</td>
+
+        <td>
+          <button (click)="remover(item.id)">Remover</button>
+        </td>
+      </tr>
+    </table>
+
+    <h3>Total selecionado: R$ {{ totalSelecionado().toFixed(2) }}</h3>
+
+    <button routerLink="/produtos">Continuar comprando</button>
+    <button type="button" (click)="finalizarCompra()">Finalizar compra</button>
+    <button (click)="limpar()">Limpar carrinho</button>
+
+  </div>
+
+</div>

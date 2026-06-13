@@ -60,6 +60,20 @@ export class ArtistaFormComponent implements OnInit {
   }
 
   cancelar(): void {
+    if (this.route.snapshot.queryParams['voltarParaAlbum']) {
+      this.router.navigate(['/albums/new']);
+      return;
+    }
+
+    this.router.navigate(['/artistas']);
+  }
+
+  voltarDepoisDeSalvar(): void {
+    if (this.route.snapshot.queryParams['voltarParaAlbum']) {
+      this.router.navigate(['/albums/new']);
+      return;
+    }
+
     this.router.navigate(['/artistas']);
   }
 
@@ -88,7 +102,7 @@ export class ArtistaFormComponent implements OnInit {
       this.service.update(payload as any).subscribe({
         next: () => {
           alert('Atualizado com sucesso!');
-          this.router.navigate(['/artistas']);
+          this.voltarDepoisDeSalvar();
         },
         error: (err: any) => {
           console.error(err);
@@ -100,7 +114,7 @@ export class ArtistaFormComponent implements OnInit {
       this.service.create(payload as any).subscribe({
         next: () => {
           alert('Criado com sucesso!');
-          this.router.navigate(['/artistas']);
+          this.voltarDepoisDeSalvar();
         },
         error: (err: any) => {
           console.error(err);

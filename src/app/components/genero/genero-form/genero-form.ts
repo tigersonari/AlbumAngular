@@ -42,44 +42,58 @@ export class GeneroFormComponent implements OnInit {
   }
 
   cancelar(): void {
+    if (this.route.snapshot.queryParams['voltarParaAlbum']) {
+      this.router.navigate(['/albums/new']);
+      return;
+    }
+
+    this.router.navigate(['/generos']);
+  }
+
+  voltarDepoisDeSalvar(): void {
+    if (this.route.snapshot.queryParams['voltarParaAlbum']) {
+      this.router.navigate(['/albums/new']);
+      return;
+    }
+
     this.router.navigate(['/generos']);
   }
 
   salvar(): void {
-  this.mensagemErro = '';
+    this.mensagemErro = '';
 
-  if (this.form.invalid) {
-    this.form.markAllAsTouched();
-    return;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    this.salvando = true;
+    const value = this.form.value;
+
+    if (value.id) {
+      this.service.update(value).subscribe({
+        next: () => {
+          alert('Atualizado com sucesso!');
+          this.voltarDepoisDeSalvar();
+        },
+        error: (err: any) => {
+          console.error(err);
+          this.mensagemErro = 'Erro ao atualizar gênero. Verifique os dados.';
+          this.salvando = false;
+        }
+      });
+    } else {
+      this.service.create(value).subscribe({
+        next: () => {
+          alert('Criado com sucesso!');
+          this.voltarDepoisDeSalvar();
+        },
+        error: (err: any) => {
+          console.error(err);
+          this.mensagemErro = 'Erro ao criar gênero. Verifique os dados.';
+          this.salvando = false;
+        }
+      });
+    }
   }
-
-  this.salvando = true;
-  const value = this.form.value;
-
-  if (value.id) {
-    this.service.update(value).subscribe({
-      next: () => {
-        alert('Atualizado com sucesso!');
-        this.router.navigate(['/generos']);
-      },
-      error: (err: any) => {
-        console.error(err);
-        this.mensagemErro = 'Erro ao atualizar gênero. Verifique os dados.';
-        this.salvando = false;
-      }
-    });
-  } else {
-    this.service.create(value).subscribe({
-      next: () => {
-        alert('Criado com sucesso!');
-        this.router.navigate(['/generos']);
-      },
-      error: (err: any) => {
-        console.error(err);
-        this.mensagemErro = 'Erro ao criar gênero. Verifique os dados.';
-        this.salvando = false;
-      }
-    });
-  }
-}
 }

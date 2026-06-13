@@ -1,5 +1,91 @@
+<div *ngIf="authService.estaLogado(); else telaPublica">
 
-<router-outlet>
-  
-</router-outlet>
+  <header class="top-header">
 
+    <div class="header-bg">
+
+      <button class="menu-btn" type="button" (click)="toggleSidebar()">
+        ☰
+      </button>
+
+      <div class="logo-area" (click)="irHome()">
+        <img src="/img/logo-albummix.png" alt="AlbumMix">
+      </div>
+
+      <nav class="header-nav">
+        <a routerLink="/produtos">Novos lançamentos</a>
+        <a routerLink="/produtos">Pré-vendas</a>
+        <a routerLink="/produtos">Clássicos</a>
+        <a routerLink="/produtos">Colecionáveis</a>
+      </nav>
+
+      <div class="header-icons">
+        <button routerLink="/perfil" title="Minha conta">👤</button>
+        <button routerLink="/lista-desejos" title="Favoritos">♡</button>
+        <button routerLink="/carrinho" title="Carrinho">🛒</button>
+      </div>
+
+    </div>
+
+  </header>
+
+  <aside class="sidebar" [class.aberta]="sidebarAberta">
+
+    <button class="fechar-menu" type="button" (click)="fecharSidebar()">×</button>
+
+    <h2>AlbumMix</h2>
+
+    <div class="usuario">
+      <span>{{ authService.getUsuario()?.nome }}</span>
+      <small>{{ authService.getUsuario()?.perfil }}</small>
+    </div>
+
+    <nav *ngIf="isUser()">
+      <a routerLink="/produtos" (click)="fecharSidebar()">Home</a>
+      <a routerLink="/carrinho" (click)="fecharSidebar()">Carrinho</a>
+      <a routerLink="/lista-desejos" (click)="fecharSidebar()">Lista de desejos</a>
+      <a routerLink="/meus-pedidos" (click)="fecharSidebar()">Meus pedidos</a>
+      <a routerLink="/enderecos" (click)="fecharSidebar()">Meus endereços</a>
+      <a routerLink="/perfil" (click)="fecharSidebar()">Minha conta</a>
+    </nav>
+
+    <nav *ngIf="isAdmin()">
+      <a routerLink="/produtos" (click)="fecharSidebar()">Loja</a>
+      <a routerLink="/dashboard" (click)="fecharSidebar()">Dashboard</a>
+
+      <hr>
+
+      <a routerLink="/albums" (click)="fecharSidebar()">Álbuns</a>
+      <a routerLink="/faixas" (click)="fecharSidebar()">Faixas</a>
+      <a routerLink="/generos" (click)="fecharSidebar()">Gêneros</a>
+      <a routerLink="/empresas" (click)="fecharSidebar()">Empresas</a>
+      <a routerLink="/artistas" (click)="fecharSidebar()">Artistas</a>
+      <a routerLink="/grupos" (click)="fecharSidebar()">Grupos</a>
+      <a routerLink="/producoes" (click)="fecharSidebar()">Produções</a>
+      <a routerLink="/composicoes" (click)="fecharSidebar()">Composições</a>
+      <a routerLink="/participacoes" (click)="fecharSidebar()">Participações</a>
+    </nav>
+
+    <button type="button" class="sair-btn" (click)="sair()">Sair</button>
+
+  </aside>
+
+  <div
+    class="overlay"
+    *ngIf="sidebarAberta"
+    (click)="fecharSidebar()">
+  </div>
+
+  <main class="conteudo">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer class="footer">
+    <p>AlbumMix © 2026 — Sua trilha, sempre.</p>
+  </footer>
+
+</div>
+
+<ng-template #telaPublica>
+  <router-outlet></router-outlet>
+</ng-template>

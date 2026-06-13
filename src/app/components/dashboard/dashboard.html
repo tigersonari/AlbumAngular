@@ -1,0 +1,195 @@
+<div class="dashboard">
+
+  <h2>Dashboard Administrativo</h2>
+
+  <p *ngIf="carregando">Carregando indicadores...</p>
+  <p *ngIf="mensagemErro">{{ mensagemErro }}</p>
+
+  <div *ngIf="dados" class="dashboard-grid">
+
+    <section class="dashboard-card catalogo">
+      <div class="card-header">
+        <span>📀</span>
+        <h3>Catálogo</h3>
+      </div>
+
+      <div class="indicadores">
+        <button>
+          <strong>{{ dados.albuns }}</strong>
+          <small>Álbuns</small>
+        </button>
+
+        <button>
+          <strong>{{ dados.faixas }}</strong>
+          <small>Faixas</small>
+        </button>
+
+        <button>
+          <strong>{{ dados.artistas }}</strong>
+          <small>Artistas</small>
+        </button>
+
+        <button>
+          <strong>{{ dados.grupos }}</strong>
+          <small>Grupos</small>
+        </button>
+
+        <button>
+          <strong>{{ dados.generos }}</strong>
+          <small>Gêneros</small>
+        </button>
+
+        <button>
+          <strong>{{ dados.empresas }}</strong>
+          <small>Empresas</small>
+        </button>
+
+        <button>
+          <strong>{{ dados.composicoes }}</strong>
+          <small>Composições</small>
+        </button>
+      </div>
+    </section>
+
+    <section class="dashboard-card vendas">
+      <div class="card-header">
+        <span>💰</span>
+        <h3>Vendas</h3>
+      </div>
+
+      <div class="indicadores">
+        <button (click)="abrirPedidos('todos')">
+          <strong>{{ dados.pedidos }}</strong>
+          <small>Total de pedidos</small>
+        </button>
+
+        <button (click)="abrirPedidos('pagos')">
+          <strong>{{ dados.pedidosPagos }}</strong>
+          <small>Pagos</small>
+        </button>
+
+        <button (click)="abrirPedidos('pendentes')">
+          <strong>{{ dados.pedidosPendentes }}</strong>
+          <small>Pendentes</small>
+        </button>
+
+        <button (click)="abrirPedidos('cancelados')">
+          <strong>{{ dados.pedidosCancelados }}</strong>
+          <small>Cancelados</small>
+        </button>
+
+        <button>
+          <strong>R$ {{ dados.faturamento?.toFixed(2) }}</strong>
+          <small>Faturamento</small>
+        </button>
+      </div>
+    </section>
+
+    <section class="dashboard-card estoque">
+      <div class="card-header">
+        <span>📦</span>
+        <h3>Estoque</h3>
+      </div>
+
+      <div class="indicadores">
+        <button (click)="abrirEstoque('com')">
+          <strong>{{ dados.albunsComEstoque }}</strong>
+          <small>Álbuns em estoque</small>
+        </button>
+
+        <button (click)="abrirEstoque('sem')">
+          <strong>{{ dados.albunsSemEstoque }}</strong>
+          <small>Álbuns sem estoque</small>
+        </button>
+      </div>
+    </section>
+
+    <section class="dashboard-card usuarios">
+      <div class="card-header">
+        <span>👥</span>
+        <h3>Usuários</h3>
+      </div>
+
+      <div class="indicadores">
+        <button (click)="abrirUsuarios()">
+          <strong>Ver</strong>
+          <small>Usuários cadastrados</small>
+        </button>
+      </div>
+    </section>
+
+  </div>
+
+ <div class="modal-overlay" *ngIf="modalAberto">
+  <div class="painel-lista">
+    <div class="painel-header">
+      <h3 *ngIf="secaoAberta.includes('pedidos')">Pedidos</h3>
+      <h3 *ngIf="secaoAberta === 'usuarios'">Usuários</h3>
+      <h3 *ngIf="secaoAberta.includes('estoque')">Estoque</h3>
+
+      <button type="button" (click)="fecharLista()">X</button>
+    </div>
+
+    <table *ngIf="secaoAberta.includes('pedidos')">
+      <tr>
+        <th>Pedido</th>
+        <th>Usuário</th>
+        <th>E-mail</th>
+        <th>Status</th>
+        <th>Total</th>
+        <th>Data</th>
+      </tr>
+
+      <tr *ngFor="let p of lista">
+        <td>#{{ p.id }}</td>
+        <td>{{ p.usuario?.nome || 'Não informado' }}</td>
+        <td>{{ p.usuario?.email || '-' }}</td>
+        <td>{{ p.status }}</td>
+        <td>R$ {{ p.total?.toFixed(2) }}</td>
+        <td>{{ p.dataCriacao | date:'dd/MM/yyyy HH:mm' }}</td>
+      </tr>
+    </table>
+
+    <table *ngIf="secaoAberta === 'usuarios'">
+  <tr>
+    <th>Nome</th>
+    <th>E-mail</th>
+    <th>Telefone</th>
+    <th>Perfil</th>
+    <th>Ação</th>
+  </tr>
+
+  <tr *ngFor="let u of lista">
+    <td>{{ u.nome }}</td>
+    <td>{{ u.email || '-' }}</td>
+    <td>{{ u.telefone || '-' }}</td>
+    <td>{{ u.perfil || '-' }}</td>
+    <td>
+      <button
+        *ngIf="u.perfil !== 'ADM'"
+        type="button"
+        (click)="promoverParaAdm(u)">
+        Tornar ADM
+      </button>
+    </td>
+  </tr>
+</table>
+
+    <table *ngIf="secaoAberta.includes('estoque')">
+      <tr>
+        <th>Álbum</th>
+        <th>Preço</th>
+        <th>Estoque</th>
+      </tr>
+
+      <tr *ngFor="let p of lista">
+        <td>{{ p.album?.titulo }}</td>
+        <td>R$ {{ p.preco?.toFixed(2) }}</td>
+        <td>{{ p.quantidadeEstoque }}</td>
+      </tr>
+    </table>
+
+  </div>
+ </div>
+
+</div>

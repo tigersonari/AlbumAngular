@@ -1,0 +1,12 @@
+table {
+  margin-top: 16px;
+}
+
+label {
+  display: block;
+  margin: 8px 0;
+}
+
+button {
+  margin: 8px;
+}

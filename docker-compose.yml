@@ -1,0 +1,13 @@
+services:
+  seaweedfs:
+    image: chrislusf/seaweedfs
+    container_name: seaweedfs
+    ports:
+      - "9333:9333"
+      - "8888:8888"
+    command: "server -master.port=9333 -volume.port=8888 -dir=/data"
+    volumes:
+      - seaweedfs_data:/data
+
+volumes:
+  seaweedfs_data:

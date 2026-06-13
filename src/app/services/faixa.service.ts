@@ -12,7 +12,7 @@ export class FaixaService {
 
   constructor(private http: HttpClient) {}
 
-  findAll(page: number, pageSize: number): Observable<Faixa[]> {
+  findAll(page = 0, pageSize = 10): Observable<Faixa[]> {
     const params = new HttpParams()
       .set('page', page)
       .set('pageSize', pageSize);
@@ -24,19 +24,23 @@ export class FaixaService {
     return this.http.get<number>(`${this.baseUrl}/count`);
   }
 
+  findByTitulo(titulo: string): Observable<Faixa[]> {
+    return this.http.get<Faixa[]>(`${this.baseUrl}/titulo/${encodeURIComponent(titulo)}`);
+  }
+
   findById(id: number): Observable<Faixa> {
     return this.http.get<Faixa>(`${this.baseUrl}/${id}`);
   }
 
-  findByAlbum(idAlbum: number) {
-  return this.http.get<any[]>(`${this.baseUrl}/find/album/${idAlbum}`);
-}
+  findByAlbum(idAlbum: number): Observable<Faixa[]> {
+    return this.http.get<Faixa[]>(`${this.baseUrl}/album/${idAlbum}`);
+  }
 
-  create(f: Faixa): Observable<Faixa> {
+  create(f: any): Observable<Faixa> {
     return this.http.post<Faixa>(this.baseUrl, f);
   }
 
-  update(f: Faixa): Observable<void> {
+  update(f: any): Observable<void> {
     return this.http.put<void>(`${this.baseUrl}/${f.id}`, f);
   }
 

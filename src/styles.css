@@ -1,80 +1,135 @@
-/* RESET */
 body {
   font-family: Arial, Helvetica, sans-serif;
-  background-color: #121212;
-  color: #ffffff;
+  background: #121212;
+  color: #fff;
   margin: 0;
   padding: 0;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 /* CONTAINER PADRÃO */
 .container {
-  max-width: 800px;
-  margin: 30px auto;
-  background: #1e1e1e;
-  padding: 20px;
-  border-radius: 8px;
+  width: min(1180px, calc(100% - 48px));
+  margin: 32px auto;
+  padding: 34px;
+
+  background: #1b1b1b;
+  border: 1px solid #2d2d2d;
+  border-radius: 18px;
 }
 
 /* TÍTULOS */
-h2 {
+.container h2 {
   text-align: center;
-  margin-bottom: 20px;
+  font-size: 32px;
+  margin: 0 0 30px;
 }
 
-/* FORM */
-form {
+.container h3 {
+  margin-top: 28px;
+  margin-bottom: 16px;
+}
+
+/* FORMULÁRIOS */
+.container form {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  flex-direction: column;
+  gap: 16px;
+
+  background: #141414;
+  border: 1px solid #2d2d2d;
+  border-radius: 14px;
+  padding: 28px;
 }
 
-input, select {
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #444;
-  background: #2c2c2c;
-  color: white;
+.container form > div {
+  width: 100%;
 }
 
-/* INPUTS LADO A LADO */
-input, select {
-  flex: 1;
+.container label {
+  display: block;
+  margin-bottom: 7px;
+  font-weight: bold;
+}
+
+.container input,
+.container select,
+.container textarea {
+  width: 100%;
+  padding: 13px 14px;
+
+  border-radius: 8px;
+  border: 1px solid #666;
+
+  background: #2a2a2a;
+  color: #fff;
+
+  font-size: 16px;
+}
+
+.container textarea {
+  min-height: 110px;
+}
+
+.container input[type="checkbox"],
+.container input[type="radio"] {
+  width: auto;
+  margin-right: 8px;
 }
 
 /* BOTÕES */
-button {
-  padding: 10px 15px;
+.container button {
+  padding: 10px 16px;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
+
   background: #1976d2;
   color: white;
+
   cursor: pointer;
+  font-size: 16px;
 }
 
-button:hover {
+.container button:hover {
   background: #125ca1;
 }
 
-/* TABELA */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
+.container button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
-th, td {
-  border: 1px solid #444;
-  padding: 10px;
+/* TABELAS */
+.container table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 22px;
+}
+
+.container th,
+.container td {
+  border: 1px solid #555;
+  padding: 12px;
   text-align: left;
 }
 
-th {
-  background: #2c2c2c;
+.container th {
+  background: #292929;
 }
 
-/* INPUT BUSCA */
-input[type="text"] {
-  width: 200px;
-  margin-right: 10px;
+.container td {
+  background: #1f1f1f;
+}
+
+small {
+  color: #ff6b5f;
+  display: block;
+  margin-top: 5px;
 }

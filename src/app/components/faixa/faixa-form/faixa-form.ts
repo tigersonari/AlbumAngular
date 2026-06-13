@@ -95,7 +95,7 @@ export class FaixaFormComponent implements OnInit {
       error: () => this.mensagemErro = 'Erro ao carregar gêneros.'
     });
 
-    this.composicaoService.findAll(0, 100).subscribe({
+    this.composicaoService.findAll(0, 5000).subscribe({
       next: (c) => this.composicoes = c,
       error: () => this.mensagemErro = 'Erro ao carregar composições.'
     });

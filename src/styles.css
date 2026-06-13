@@ -1,7 +1,37 @@
+body.dark-theme {
+  --bg: #121212;
+  --card: #1b1b1b;
+  --card-2: #141414;
+  --card-3: #1f1f1f;
+  --text: #ffffff;
+  --muted: #cccccc;
+  --border: #2d2d2d;
+  --input: #2a2a2a;
+  --input-border: #666;
+  --primary: #7b241c;
+  --primary-hover: #a93226;
+  --danger: #ff6b5f;
+}
+
+body.light-theme {
+  --bg: #f7f7f7;
+  --card: #ffffff;
+  --card-2: #ffffff;
+  --card-3: #f1f1f1;
+  --text: #171717;
+  --muted: #555555;
+  --border: #d0d0d0;
+  --input: #ffffff;
+  --input-border: #bdbdbd;
+  --primary: #8e241b;
+  --primary-hover: #b83226;
+  --danger: #b42318;
+}
+
 body {
   font-family: Arial, Helvetica, sans-serif;
-  background: #121212;
-  color: #fff;
+  background: var(--bg);
+  color: var(--text);
   margin: 0;
   padding: 0;
 }
@@ -16,8 +46,9 @@ body {
   margin: 32px auto;
   padding: 34px;
 
-  background: #1b1b1b;
-  border: 1px solid #2d2d2d;
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
   border-radius: 18px;
 }
 
@@ -43,8 +74,8 @@ body {
   flex-direction: column;
   gap: 16px;
 
-  background: #141414;
-  border: 1px solid #2d2d2d;
+  background: var(--card-2);
+  border: 1px solid var(--border);
   border-radius: 14px;
   padding: 28px;
 }
@@ -66,10 +97,10 @@ body {
   padding: 13px 14px;
 
   border-radius: 8px;
-  border: 1px solid #666;
+  border: 1px solid var(--input-border);
 
-  background: #2a2a2a;
-  color: #fff;
+  background: var(--input);
+  color: var(--text);
 
   font-size: 16px;
 }
@@ -90,7 +121,7 @@ body {
   border: none;
   border-radius: 8px;
 
-  background: #1976d2;
+  background: var(--primary);
   color: white;
 
   cursor: pointer;
@@ -98,7 +129,7 @@ body {
 }
 
 .container button:hover {
-  background: #125ca1;
+  background: var(--primary-hover);
 }
 
 .container button:disabled {
@@ -115,21 +146,127 @@ body {
 
 .container th,
 .container td {
-  border: 1px solid #555;
+  border: 1px solid var(--border);
   padding: 12px;
   text-align: left;
+  color: var(--text);
 }
 
 .container th {
-  background: #292929;
+  background: var(--card-3);
 }
 
 .container td {
-  background: #1f1f1f;
+  background: var(--card-2);
 }
 
 small {
-  color: #ff6b5f;
+  color: var(--danger);
   display: block;
   margin-top: 5px;
+}
+
+/* COMPONENTES FORA DE .container */
+.card-produto,
+.card-categoria,
+.dashboard-card,
+.painel-lista,
+.perfil-card,
+.card-principal,
+.card-acao,
+.faixas-card,
+.capa-card,
+.info-card,
+.card,
+.form-endereco {
+  background: var(--card) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+.card-produto p,
+.card-categoria p,
+.info-item span,
+.faixa-item small {
+  color: var(--muted) !important;
+}
+
+.card-produto strong,
+.card-produto h3,
+.card-categoria h3,
+.dashboard h2,
+.dashboard h3,
+.info-card h2,
+.info-card h3 {
+  color: var(--text) !important;
+}
+
+input,
+select,
+textarea {
+  background: var(--input);
+  color: var(--text);
+  border-color: var(--input-border);
+}
+
+
+
+
+body.light-theme .home-produtos,
+body.light-theme .dashboard,
+body.light-theme .conteudo {
+  background: var(--bg) !important;
+  color: var(--text) !important;
+}
+
+body.light-theme .hero,
+body.light-theme .top-header,
+body.light-theme .footer,
+body.light-theme .sidebar {
+  background-color: #ffffff !important;
+  color: #171717 !important;
+}
+
+body.light-theme .card-produto,
+body.light-theme .card-categoria,
+body.light-theme .container,
+body.light-theme .produto-detail-wrapper,
+body.light-theme .produto-main,
+body.light-theme .produto-info,
+body.light-theme .faixas-card {
+  background: #ffffff !important;
+  color: #171717 !important;
+  border-color: #d0d0d0 !important;
+}
+
+body.light-theme h1,
+body.light-theme h2,
+body.light-theme h3,
+body.light-theme p,
+body.light-theme strong,
+body.light-theme span,
+body.light-theme td,
+body.light-theme th,
+body.light-theme label {
+  color: #171717 !important;
+}
+
+body.light-theme input,
+body.light-theme select,
+body.light-theme textarea {
+  background: #ffffff !important;
+  color: #171717 !important;
+  border-color: #bdbdbd !important;
+}
+
+body.light-theme table th {
+  background: #f1f1f1 !important;
+}
+
+body.light-theme table td {
+  background: #ffffff !important;
+}
+
+body.light-theme .categoria-overlay {
+  background: #ffffff !important;
 }

@@ -20,6 +20,9 @@
       </nav>
 
       <div class="header-icons">
+        <button type="button" (click)="alternarTema()" title="Alternar tema">
+          {{ temaService.temaAtual() === 'dark' ? '☀️' : '🌙' }}
+        </button>
         <button routerLink="/perfil" title="Minha conta">👤</button>
         <button routerLink="/lista-desejos" title="Favoritos">♡</button>
         <button routerLink="/carrinho" title="Carrinho">🛒</button>

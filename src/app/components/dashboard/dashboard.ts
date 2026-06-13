@@ -116,9 +116,15 @@ promoverParaAdm(usuario: any): void {
     next: () => {
       alert('Usuário promovido para ADM com sucesso!');
       this.abrirUsuarios();
+      this.carregar();
     },
-    error: () => {
-      alert('Erro ao promover usuário.');
+    error: (err) => {
+      console.error(err);
+      alert(
+        err.error?.message ||
+        err.error?.detail ||
+        'Erro ao promover usuário.'
+      );
     }
   });
 }

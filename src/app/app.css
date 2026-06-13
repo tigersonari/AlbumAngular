@@ -204,3 +204,68 @@
   border-top: 1px solid #222;
   color: #aaa;
 }
+
+/*tema*/
+body.dark-theme {
+  --bg: #121212;
+  --card: #1e1e1e;
+  --card-soft: #1a1a1a;
+  --text: #ffffff;
+  --text-muted: #cccccc;
+  --border: #444;
+  --input: #2c2c2c;
+  --button: #7b241c;
+}
+
+body.light-theme {
+  --bg: #f4f1ee;
+  --card: #ffffff;
+  --card-soft: #f8f8f8;
+  --text: #181818;
+  --text-muted: #555555;
+  --border: #cccccc;
+  --input: #ffffff;
+  --button: #7b241c;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+.container,
+.card-produto,
+.card-categoria,
+.dashboard-card,
+.painel-lista,
+.produto-detail,
+.perfil-card,
+.endereco-card {
+  background: var(--card);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+input,
+select,
+textarea {
+  background: var(--input);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+table,
+th,
+td {
+  border-color: var(--border);
+  color: var(--text);
+}
+
+th {
+  background: var(--card-soft);
+}
+
+button {
+  background: var(--button);
+  color: #fff;
+}

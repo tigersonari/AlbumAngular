@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { AuthService } from './services/auth.service';
 
+import { TemaService } from './services/tema.service';
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -15,9 +17,12 @@ export class App {
   protected readonly title = signal('hello-world');
 
   constructor(
-    public authService: AuthService,
-    private router: Router
-  ) {}
+  public authService: AuthService,
+  private router: Router,
+  public temaService: TemaService
+) {
+  this.temaService.iniciarTema();
+}
 
   isAdmin(): boolean {
     return this.authService.getUsuario()?.perfil === 'ADM';
@@ -46,4 +51,9 @@ irHome(): void {
   this.router.navigate(['/produtos']);
   this.fecharSidebar();
 }
+
+alternarTema(): void {
+  this.temaService.alternarTema();
+}
+
 }

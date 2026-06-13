@@ -57,6 +57,8 @@ import { RedefinirSenhaComponent } from './components/redefinir-senha/redefinir-
 
 
 
+
+
 export const routes: Routes = [
    // públicas
   { path: 'login', component: LoginComponent },

@@ -19,6 +19,8 @@ export class CadastroComponent {
   email = '';
   telefone = '';
 
+  mostrarSenha = false;
+
   mensagemErro = '';
   carregando = false;
 
@@ -52,24 +54,24 @@ export class CadastroComponent {
       telefone: this.telefone
     }).subscribe({
       next: () => {
-  this.authService.login({
-    login: this.login,
-    senha: this.senha
-  }).subscribe({
-    next: (usuarioLogado) => {
-      this.authService.salvarUsuario(usuarioLogado);
+        this.authService.login({
+          login: this.login,
+          senha: this.senha
+        }).subscribe({
+          next: (usuarioLogado) => {
+            this.authService.salvarUsuario(usuarioLogado);
 
-      alert('Cadastro realizado com sucesso! Você já está logado.');
-      this.router.navigate(['/produtos']);
-    },
-    error: (err: any) => {
-      console.error(err);
-      this.mensagemErro = 'Cadastro realizado, mas não foi possível fazer login automático.';
-      alert(this.mensagemErro);
-      this.router.navigate(['/login']);
-    }
-  });
-},
+            alert('Cadastro realizado com sucesso! Você já está logado.');
+            this.router.navigate(['/produtos']);
+          },
+          error: (err: any) => {
+            console.error(err);
+            this.mensagemErro = 'Cadastro realizado, mas não foi possível fazer login automático.';
+            alert(this.mensagemErro);
+            this.router.navigate(['/login']);
+          }
+        });
+      },
       error: (err: any) => {
         console.error(err);
         this.mensagemErro = 'Erro ao cadastrar usuário.';

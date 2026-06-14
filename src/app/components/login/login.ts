@@ -16,6 +16,8 @@ export class LoginComponent {
   login = '';
   senha = '';
 
+  mostrarSenha = false;
+
   mensagemErro = '';
   carregando = false;
 

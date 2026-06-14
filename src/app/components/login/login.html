@@ -11,15 +11,21 @@
       [(ngModel)]="login"
       placeholder="Login">
 
-    <input
-      name="senha"
-      [(ngModel)]="senha"
-      type="password"
-      placeholder="Senha">
+    <div class="password-wrapper">
+      <input
+        name="senha"
+        [(ngModel)]="senha"
+        [type]="mostrarSenha ? 'text' : 'password'"
+        placeholder="Senha">
 
-      <a routerLink="/esqueci-senha">
-    Esqueci minha senha
-      </a>
+      <button type="button" class="toggle-password" (click)="mostrarSenha = !mostrarSenha">
+        {{ mostrarSenha ? '🙈' : '👁' }}
+      </button>
+    </div>
+
+    <a routerLink="/esqueci-senha">
+      Esqueci minha senha
+    </a>
 
     <button type="button" (click)="entrar()" [disabled]="carregando">
       {{ carregando ? 'Entrando...' : 'Entrar' }}

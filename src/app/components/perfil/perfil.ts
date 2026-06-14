@@ -18,12 +18,16 @@ export class PerfilComponent implements OnInit {
 
   nome = '';
   login = '';
-
   senhaConfirmacao = '';
 
   senhaAtual = '';
   novaSenha = '';
   confirmarSenha = '';
+
+  mostrarSenhaConfirmacao = false;
+  mostrarSenhaAtual = false;
+  mostrarNovaSenha = false;
+  mostrarConfirmarSenha = false;
 
   mensagemErro = '';
   mensagemSucesso = '';
@@ -42,43 +46,44 @@ export class PerfilComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-  this.usuario = this.authService.getUsuario();
+    this.usuario = this.authService.getUsuario();
 
-  if (this.usuario) {
-    this.nome = this.usuario.nome;
-    this.login = this.usuario.login;
-  }
+    if (this.usuario) {
+      this.nome = this.usuario.nome;
+      this.login = this.usuario.login;
+    }
 
-  this.http.get<any>('http://localhost:8080/usuarios/me')
-    .subscribe({
-      next: (dados) => {
-        this.nome = dados.nome || '';
-        this.login = dados.login || '';
-        this.email = dados.email || '';
-        this.telefone = dados.telefone || '';
+    this.http.get<any>('http://localhost:8080/usuarios/me')
+      .subscribe({
+        next: (dados) => {
+          this.nome = dados.nome || '';
+          this.login = dados.login || '';
+          this.email = dados.email || '';
+          this.telefone = dados.telefone || '';
 
-        this.nomeCard = this.nome;
-        this.emailCard = this.email;
-        this.telefoneCard = this.telefone;  
+          this.nomeCard = this.nome;
+          this.emailCard = this.email;
+          this.telefoneCard = this.telefone;
 
-        const usuarioLogado = this.authService.getUsuario();
+          const usuarioLogado = this.authService.getUsuario();
 
-        if (usuarioLogado) {
-          usuarioLogado.nome = this.nome;
-          usuarioLogado.login = this.login;
-          usuarioLogado.email = this.email;
-          usuarioLogado.telefone = this.telefone;
+          if (usuarioLogado) {
+            usuarioLogado.nome = this.nome;
+            usuarioLogado.login = this.login;
+            usuarioLogado.email = this.email;
+            usuarioLogado.telefone = this.telefone;
 
-          this.authService.salvarUsuario(usuarioLogado);
-          this.usuario = usuarioLogado;
+            this.authService.salvarUsuario(usuarioLogado);
+            this.usuario = usuarioLogado;
+          }
+
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          this.mensagemErro = 'Erro ao carregar dados do perfil.';
         }
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        this.mensagemErro = 'Erro ao carregar dados do perfil.';
-      }
-    });
-}
+      });
+  }
 
   atualizarPerfil(): void {
     this.mensagemErro = '';
@@ -97,33 +102,33 @@ export class PerfilComponent implements OnInit {
       senhaConfirmacao: this.senhaConfirmacao
     }).subscribe({
       next: (usuarioAtualizado) => {
-  const usuarioLogado = this.authService.getUsuario();
+        const usuarioLogado = this.authService.getUsuario();
 
-  if (usuarioLogado) {
-    usuarioLogado.nome = usuarioAtualizado.nome;
-    usuarioLogado.login = usuarioAtualizado.login;
-    usuarioLogado.email = usuarioAtualizado.email;
-    usuarioLogado.telefone = usuarioAtualizado.telefone;
+        if (usuarioLogado) {
+          usuarioLogado.nome = usuarioAtualizado.nome;
+          usuarioLogado.login = usuarioAtualizado.login;
+          usuarioLogado.email = usuarioAtualizado.email;
+          usuarioLogado.telefone = usuarioAtualizado.telefone;
 
-    this.authService.salvarUsuario(usuarioLogado);
-    this.usuario = usuarioLogado;
+          this.authService.salvarUsuario(usuarioLogado);
+          this.usuario = usuarioLogado;
 
-    this.nomeCard = this.nome;
-    this.emailCard = this.email; ////
-    this.telefoneCard = this.telefone; ////
-      }
+          this.nomeCard = this.nome;
+          this.emailCard = this.email;
+          this.telefoneCard = this.telefone;
+        }
 
-  this.senhaConfirmacao = '';
-  this.mensagemSucesso = 'Perfil atualizado com sucesso!';
+        this.senhaConfirmacao = '';
+        this.mostrarSenhaConfirmacao = false;
+        this.mensagemSucesso = 'Perfil atualizado com sucesso!';
 
-  alert('Perfil atualizado com sucesso!');
-  this.cdr.detectChanges();
-}
-,
+        alert('Perfil atualizado com sucesso!');
+        this.cdr.detectChanges();
+      },
       error: () => {
-  this.mensagemErro = 'Erro ao atualizar perfil. Verifique a senha.';
-  alert('Erro ao atualizar perfil. Verifique a senha.');
-}
+        this.mensagemErro = 'Erro ao atualizar perfil. Verifique a senha.';
+        alert('Erro ao atualizar perfil. Verifique a senha.');
+      }
     });
   }
 
@@ -146,18 +151,22 @@ export class PerfilComponent implements OnInit {
       novaSenha: this.novaSenha
     }).subscribe({
       next: () => {
-  this.mensagemSucesso = 'Senha alterada com sucesso!';
-  this.senhaAtual = '';
-  this.novaSenha = '';
-  this.confirmarSenha = '';
+        this.mensagemSucesso = 'Senha alterada com sucesso!';
+        this.senhaAtual = '';
+        this.novaSenha = '';
+        this.confirmarSenha = '';
 
-  alert('Senha alterada com sucesso!');
-  this.cdr.detectChanges();
-},
-error: () => {
-  this.mensagemErro = 'Erro ao alterar senha. Verifique a senha atual.';
-  alert('Erro ao alterar senha. Verifique a senha atual.');
-}
+        this.mostrarSenhaAtual = false;
+        this.mostrarNovaSenha = false;
+        this.mostrarConfirmarSenha = false;
+
+        alert('Senha alterada com sucesso!');
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.mensagemErro = 'Erro ao alterar senha. Verifique a senha atual.';
+        alert('Erro ao alterar senha. Verifique a senha atual.');
+      }
     });
   }
 }

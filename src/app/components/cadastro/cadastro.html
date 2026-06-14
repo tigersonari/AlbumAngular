@@ -10,7 +10,18 @@
     <input name="login" [(ngModel)]="login" placeholder="Login">
     <input name="email" [(ngModel)]="email" placeholder="E-mail">
     <input name="telefone" [(ngModel)]="telefone" placeholder="Telefone com 11 dígitos">
-    <input name="senha" [(ngModel)]="senha" type="password" placeholder="Senha">
+
+    <div class="password-wrapper">
+      <input
+        name="senha"
+        [(ngModel)]="senha"
+        [type]="mostrarSenha ? 'text' : 'password'"
+        placeholder="Senha">
+
+      <button type="button" class="toggle-password" (click)="mostrarSenha = !mostrarSenha">
+        {{ mostrarSenha ? '🙈' : '👁' }}
+      </button>
+    </div>
 
     <button type="button" (click)="cadastrar()" [disabled]="carregando">
       {{ carregando ? 'Cadastrando...' : 'Cadastrar' }}
